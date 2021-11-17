@@ -1,6 +1,5 @@
 ^\.Rproj\.user$    # used for temporary files. 
 ^ignore$
-^doc$
 ^Meta$
 ^.*\.Rproj$
 ^BORIS\.Rproj$
