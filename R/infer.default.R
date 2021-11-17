@@ -63,7 +63,7 @@ infer.default <- function(covariates = NULL,
   }
   
   if (is.null(dnaReference)){
-    stop("Please indicate whether a reference genome is included with the argument 'dnaReference'")
+    stop("HELEOEOELEOELEOELEO")#("Please indicate whether a reference genome is included with the argument 'dnaReference'")
   }
   
 
