@@ -1,4 +1,5 @@
 infer.main<-function(){
+  stop("In infer.main")
   cpp_out<-infer_cpp()
   cat("\nAll requested chains have been generated successfully.\n ")
   return(list(seed = cpp_out$seed,
