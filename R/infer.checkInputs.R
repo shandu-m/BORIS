@@ -1,5 +1,7 @@
 infer.checkInputs <- function(parsAux , keyInits , priors , scalingFactors, seed){
   
+  stop("HELLO CHECKING IN PUTS NOW!!")
+  
   if ((parsAux[1, "n"] < 1) | (parsAux[1, "n"] > 500)){ stop("Population size, n, is out of acceptable range of [1 , 500]!")}
   if ( sum(parsAux[1, "kernel_type"] == c("exponential", "cauchy" , "gaussian" , "power_law") ) == 0 )  { stop("Kernel type can only take one of 'exponential', 'cauchy' , 'gaussian' , 'power_law'! ")}
   if ( sum(parsAux[1, "coord_type"] == c("longlat","cartesian")) == 0 ){ stop("Coordinate system can only take 'longlat' for decimal degrees (i.e. latitudes and longitudes) or 'cartesian' for projected coordinate reference system!")}
