@@ -18,6 +18,7 @@ infer.default <- function(covariates = NULL,
                           debug = NULL){
   
 
+  print("Running infer.default.R")
   
   options(warn=-1)
   if ( .Platform$OS.type != "windows" ) {
