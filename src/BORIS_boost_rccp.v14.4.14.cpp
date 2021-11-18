@@ -12891,7 +12891,7 @@ Rcpp::List infer_cpp() {
 	ind_n_base_part = para_priorsetc.ind_n_base_part;// =1 if the seq data is partial
 	n_base_part = para_priorsetc.n_base_part; // the partial length used if ind_n_base_part =1
 
-  cerr << "spot" + shandu_i + "...\n"; shandu_i+=1 // ###
+  cerr << "spot" << shandu_i << "...\n"; shandu_i+=1; // ###
 
 	para_key_init para_init;
 	IO_parakeyinit(para_init);
@@ -12899,7 +12899,7 @@ Rcpp::List infer_cpp() {
 	para_scaling_factors para_scalingfactors;
 	IO_parascalingfactors(para_scalingfactors);
 
-  cerr << "spot" + shandu_i + "...\n"; shandu_i+=1 // ###
+  cerr << "spot" << shandu_i << "...\n"; shandu_i+=1; // ###
 
 	para_aux para_other;
 	IO_para_aux(para_other);  //Importing parameters
@@ -12910,7 +12910,7 @@ Rcpp::List infer_cpp() {
 	opt_mov = para_other.opt_mov;
 	debug = para_other.debug;
 
-  cerr << "spot" + shandu_i + "...\n"; shandu_i+=1 // ###
+  cerr << "spot" << shandu_i << "...\n"; shandu_i+=1; // ###
 
 	epi_struct epi_final;
 	nt_struct nt_data;
@@ -12921,7 +12921,7 @@ Rcpp::List infer_cpp() {
 	vector<int> con_seq, con_seq_estm;
 	IO_data(para_other, coordinate, epi_final, nt_data, index, con_seq_estm, seeds, moves); //Importing  data
 
-  cerr << "spot" + shandu_i + "...\n"; shandu_i+=1 // ###
+  cerr << "spot" << shandu_i << "...\n"; shandu_i+=1; // ###
 
 
 	// set a universal seed
@@ -12953,7 +12953,7 @@ Rcpp::List infer_cpp() {
 
 	rng_type rng(seed); //set a universal seed
 
-  cerr << "spot" + shandu_i + "...\n"; shandu_i+=1 // ###
+  cerr << "spot" << shandu_i << "...\n"; shandu_i+=1; // ###
 
 	vec2int sample_data; // 2-d vector contains the sampled sequences; non-sampled premises would have unexpected values
 	sample_data.resize(NLIMIT);
@@ -12985,7 +12985,7 @@ Rcpp::List infer_cpp() {
 	}// end while for getline
 	myfile_in.close();
 
-  cerr << "spot" + shandu_i + "...\n"; shandu_i+=1 // ###
+  cerr << "spot" << shandu_i << "...\n"; shandu_i+=1; // ###
 
 	// upload the true infected sources vector
 	vector<int> atab_from; // vector to hold true sources (from accuracy table comparison file)
