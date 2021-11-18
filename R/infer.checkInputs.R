@@ -1,6 +1,6 @@
 infer.checkInputs <- function(parsAux , keyInits , priors , scalingFactors, seed){
   
-  stop("HELLO CHECKING IN PUTS NOW!!")
+  print(">>> in infer.checkInputs.R...") ###
   
   if ((parsAux[1, "n"] < 1) | (parsAux[1, "n"] > 500)){ stop("Population size, n, is out of acceptable range of [1 , 500]!")}
   if ( sum(parsAux[1, "kernel_type"] == c("exponential", "cauchy" , "gaussian" , "power_law") ) == 0 )  { stop("Kernel type can only take one of 'exponential', 'cauchy' , 'gaussian' , 'power_law'! ")}
@@ -21,7 +21,7 @@ infer.checkInputs <- function(parsAux , keyInits , priors , scalingFactors, seed
   if ((parsAux[1, "n_cout"] < 1 ) | (parsAux[1, "n_cout"] >  parsAux[1, "n_iterations"] )){ stop("Frequency of updating the console output, n_cout, must be in between 1 and n_iterations!")}
   if ( sum(parsAux[1, "opt_latgamma"] == c(0,1)) == 0 ){ stop("Implementation option, opt_latgamma, can take 1 to assume a Gamma distribution for the latent period or 0 to assume a Gaussian distribution!")}
   if ( sum(parsAux[1, "opt_k80"] == c(0,1) ) == 0 ){ stop("Implementation option, opt_k80, can take 1 for reformulated K80 DNA substitution model to match original 1980 paper or 0 for the original version in Lau et al. (2015, see the references of the package) based on a secondary reference!")}
- if ( sum(parsAux[1, "opt_betaij"] == c(0,1) ) == 0 ){ stop("Implementation option, opt_betaij, can take 1 for farm-level covariates incorporated into beta, i.e. betaij Lau modified model from Firestone et al. (2019, see the references of the package), 0 for the originally implemented model from Lau et al. (2015, see the references of the package.")}
+  if ( sum(parsAux[1, "opt_betaij"] == c(0,1) ) == 0 ){ stop("Implementation option, opt_betaij, can take 1 for farm-level covariates incorporated into beta, i.e. betaij Lau modified model from Firestone et al. (2019, see the references of the package), 0 for the originally implemented model from Lau et al. (2015, see the references of the package.")}
   if ( sum(parsAux[1, "opt_ti_update"] == c(0,1) ) == 0 ){ stop("Implementation option opt_ti_update 1 to update timing of inferred onset of infectivity or 0 as in Lau original implementation based on simulated data, see Supporting Information in Lau et al. (2015, see the references of the package)!")}
   if ( sum(parsAux[1, "opt_mov"] == c(0,1,2) ) == 0 ){ stop("Implementation option opt_mov, can take 1 for contact/movement network to be incorprated into likelihood, or 0 for the originally implemented model from Lau et al. (2015, see the references of the package)")}  
   
@@ -100,3 +100,5 @@ infer.checkInputs <- function(parsAux , keyInits , priors , scalingFactors, seed
 if (seed[1] < 0){ stop("The seed must be greater than 0!")}  
 
 }
+
+print("DONE.")
