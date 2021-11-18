@@ -213,7 +213,7 @@ infer.default <- function(covariates = NULL,
   
 
   ##index.txt
-  print("Assigning the host with an unknown initial source (9999) as the index case.\n?! what is there are multiple?")
+  print("Assigning the host with an unknown initial source (9999) as the index case?! what is there are multiple?")
   index <- which(epi.data$initial_source == 9999) - 1
   index <- c('k', index)
   index.out<-matrix(index, nrow=length(index))
