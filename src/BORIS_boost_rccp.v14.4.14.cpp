@@ -12880,7 +12880,7 @@ Rcpp::List infer_cpp() {
   /*- int main -----------------*/
   /*----------------------------*/
 
-  cout << ">>> C: infer_cpp()..."
+  cout << ">>> C: infer_cpp()..."; // ###
 
 	ifstream myfile_in; //recycled instream (not in loops)
 	ofstream myfile_out; //recycled outstream (not in loops)
