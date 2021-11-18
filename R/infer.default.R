@@ -18,7 +18,7 @@ infer.default <- function(covariates = NULL,
                           debug = NULL){
   
 
-  stop("Testing method 2")
+  print("\n>>> infer.default.R...")
   
   options(warn=-1)
   if ( .Platform$OS.type != "windows" ) {
@@ -63,7 +63,7 @@ infer.default <- function(covariates = NULL,
   }
   
   if (is.null(dnaReference)){
-    stop("HELEOEOELEOELEOELEO")#("Please indicate whether a reference genome is included with the argument 'dnaReference'")
+    stop("Please indicate whether a reference genome is included with the argument 'dnaReference'")
   }
   
 
@@ -135,6 +135,7 @@ infer.default <- function(covariates = NULL,
   #epi.data$t_i <- epi.data$t_o - 1
   #epi.data$t_e <- epi.data$t_i - 2
   
+  print("introducing ftype0, ftype1, ftype2")
   epi.data$ftype0 <- 0
   epi.data$ftype0[epi.data$ftype == 0] <- 1
   epi.data$ftype1 <- 0
@@ -167,6 +168,8 @@ infer.default <- function(covariates = NULL,
   write.table(epi.data, paste0(inputPath, "/epi.csv"), quote = F, sep = ",",eol = "\n", na = "NA", dec = ".", row.names = F,col.names = TRUE)
 
   write.table(epi.data[,c("coor_x", "coor_y")], paste0(inputPath, "/coordinate.csv"), quote = F, sep = ",",eol = "\n", na = "NA", dec = ".", row.names = F,col.names = FALSE)
+  
+  print("written epi.csv and coordinate.csv")
     
 ## seed   
   write.table(seed, paste(inputPath, "/seeds.csv", sep=''), quote = F, sep = ",",eol = "\n", na = "NA", dec = ".", row.names = F, col.names = F)
@@ -210,6 +213,7 @@ infer.default <- function(covariates = NULL,
   
 
   ##index.txt
+  print("Assigning the host with an unknown initial source (9999) as the index case.\n?! what is there are multiple?")
   index <- which(epi.data$initial_source == 9999) - 1
   index <- c('k', index)
   index.out<-matrix(index, nrow=length(index))
@@ -233,6 +237,7 @@ infer.default <- function(covariates = NULL,
   seq_out[seq_out == 't'] <- 3
   seq_out[seq_out == 'c'] <- 4
   seq_out[seq_out == 'n'] <- NA
+  print("converted the agtcn to 1234NA. so it handles NA's?")
   
   if(dnaReference==F){
     
@@ -273,11 +278,17 @@ infer.default <- function(covariates = NULL,
   write.table(moves.inputs, paste0(inputPath, "/moves.csv"), quote = F, sep = ",",eol = "\n", na = "NA", dec = ".", row.names = F, col.names = names(moves.inputs))    
   
   
+  print("DONE. CAll infer.main()")
+  
   #Call the main code
   res = infer.main()
   
+  print(">>> back in infer.default.R...")
+  
   res$call = match.call()
   class(res) = c("infer" , "BORIS")
+  
+  print(">>> will return data now")
 
   # res
   return(list(epi.data = epi.data,
