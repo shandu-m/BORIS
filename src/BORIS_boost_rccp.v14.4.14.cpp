@@ -1736,12 +1736,16 @@ inline double lh_snull_base(const int& con_base, const int& base, const double& 
 
 inline void sample_snull (const vector<int>& con_seq, vector<int>& seq_proposed, const double& p_ber, const int& n_base, rng_type & rng_arg){ //sample a seq for background
   cerr << "\t>>>> sample_snull\n"; // ###
+  cerr << "seq_proposed (" << seq_proposed.size() << ") "; // ###
+  cerr << seq_proposed << "\n"; // ###
+  cerr << "con_seq (" << con_seq.size() << ") "; // ###
+  cerr << con_seq << "\n"; // ###
+  
   for (int j=0; j<=(n_base-1); j++) {
     
     //int ber_trial =  gsl_ran_bernoulli (r,p_ber); // return 1 if a change is to happen
     int ber_trial = rbern(p_ber, rng_arg); 
     int base_proposed = 0;// any output of 0 would indicate a mistake
-    
     
     switch(int (ber_trial ==1)) {
     	
@@ -1832,7 +1836,10 @@ inline void sample_snull (const vector<int>& con_seq, vector<int>& seq_proposed,
 		    }
           	}   
       
+		cerr << "con_seq base: " << con_seq.at(j) << "\n"; // ###
+		cerr << "base_proposed: " << base_proposed << "\n"; // ###
       		seq_proposed.at(j) = base_proposed;
+		cerr << "updated seq_proposed\n"; // ###
       
       		break;
     	    }
