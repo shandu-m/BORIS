@@ -12890,7 +12890,7 @@ Rcpp::List infer_cpp() {
 	ind_n_base_part = para_priorsetc.ind_n_base_part;// =1 if the seq data is partial
 	n_base_part = para_priorsetc.n_base_part; // the partial length used if ind_n_base_part =1
 
-  cerr << "error above line " << __LINE__ << "\n"; // ###
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	para_key_init para_init;
 	IO_parakeyinit(para_init);
@@ -12898,7 +12898,7 @@ Rcpp::List infer_cpp() {
 	para_scaling_factors para_scalingfactors;
 	IO_parascalingfactors(para_scalingfactors);
 
-  cerr << "error above line " << __LINE__ << "\n"; // ###
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	para_aux para_other;
 	IO_para_aux(para_other);  //Importing parameters
@@ -12909,7 +12909,7 @@ Rcpp::List infer_cpp() {
 	opt_mov = para_other.opt_mov;
 	debug = para_other.debug;
 
-  cerr << "error above line " << __LINE__ << "\n"; // ###
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	epi_struct epi_final;
 	nt_struct nt_data;
@@ -12920,7 +12920,7 @@ Rcpp::List infer_cpp() {
 	vector<int> con_seq, con_seq_estm;
 	IO_data(para_other, coordinate, epi_final, nt_data, index, con_seq_estm, seeds, moves); //Importing  data
 
-  cerr << "error above line " << __LINE__ << "\n"; // ###
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 
 	// set a universal seed
@@ -12952,7 +12952,7 @@ Rcpp::List infer_cpp() {
 
 	rng_type rng(seed); //set a universal seed
 
-  cerr << "error above line " << __LINE__ << "\n"; // ###
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	vec2int sample_data; // 2-d vector contains the sampled sequences; non-sampled premises would have unexpected values
 	sample_data.resize(NLIMIT);
@@ -12960,6 +12960,7 @@ Rcpp::List infer_cpp() {
 		sample_data[i].reserve(SEQLLIMIT);
 	}
 
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 
 	string line, field;
@@ -12984,14 +12985,17 @@ Rcpp::List infer_cpp() {
 	}// end while for getline
 	myfile_in.close();
 
-  cerr << "error above line " << __LINE__ << "\n"; // ###
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	// upload the true infected sources vector
 	vector<int> atab_from; // vector to hold true sources (from accuracy table comparison file)
 	atab_from.resize(NLIMIT);
 	myfile_in.open((string(PATH1) + string("atab_from.csv")).c_str(), ios::in);
 	line_count = 0;
-	while (getline(myfile_in, line)) {
+  
+  cerr << "reached line " << __LINE__ << "\n"; // ###
+	
+  while (getline(myfile_in, line)) {
 
 		stringstream ss(line);
 
@@ -13014,6 +13018,8 @@ Rcpp::List infer_cpp() {
 		myfile_out.close();
 	}
 
+  cerr << "reached line " << __LINE__ << "\n"; // ###
+
 
 	if (debug == 1) {
 		for (int i = 0; i <= (para_other.n - 1); i++) {
@@ -13030,6 +13036,8 @@ Rcpp::List infer_cpp() {
 		}
 	}
 
+  cerr << "reached line " << __LINE__ << "\n"; // ###
+
 	/*----------------------------*/
 
 	vector<int> xi_U, xi_E, xi_E_minus, xi_I, xi_R, xi_EnI, xi_EnIS, xi_InR; // indices sets indicating the individuals stay in S OR have gone through the other classes (E OR I OR R), and individuals hve gone through E but not I (EnI) and I but not R (InR)
@@ -13045,6 +13053,8 @@ Rcpp::List infer_cpp() {
 	xi_EnIS.reserve(NLIMIT);
 	xi_InR.reserve(NLIMIT);
 	xi_beta_E.reserve(NLIMIT);
+
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 
 	for (int i = 0; i <= (para_other.n - 1); i++) {
@@ -13079,6 +13089,7 @@ Rcpp::List infer_cpp() {
 		if ((epi_final.infected_source.at(i) != 9999) & (epi_final.infected_source.at(i) != -99)) xi_beta_E.push_back(i);
 	}
 
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 
 	/*----------------------------*/
@@ -13110,6 +13121,7 @@ Rcpp::List infer_cpp() {
 	lh_square.movest_sum_E.assign(para_other.n, 0); //count of moves to those exposed before tmax, time dependent
 	lh_square.moves_sum_E.assign(para_other.n, 0);  //count of moves to those exposed before tmax, ignoring time
 
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	/*--------------------------------Start of MCMC sampling------------------------------------------*/
 
@@ -13165,6 +13177,7 @@ Rcpp::List infer_cpp() {
 
 	//Note: struct copy is fragile: nt_data_current=nt_data wont work!!//
 
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	lh_SQUARE lh_square_current;
 	lh_square_current.f_U.assign(para_other.n, 1.0);
@@ -13627,6 +13640,7 @@ Rcpp::List infer_cpp() {
 
 
 		}
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 		//------------------
 		//sf console output
