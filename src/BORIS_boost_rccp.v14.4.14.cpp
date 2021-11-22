@@ -1735,104 +1735,118 @@ inline double lh_snull_base(const int& con_base, const int& base, const double& 
 /*-------------------------------------------------------*/
 
 inline void sample_snull (const vector<int>& con_seq, vector<int>& seq_proposed, const double& p_ber, const int& n_base, rng_type & rng_arg){ //sample a seq for background
-  
-  for (int j=0;j<=(n_base-1);j++){
+  cerr << "\t>>>> sample_snull\n"; // ###
+  for (int j=0; j<=(n_base-1); j++) {
     
     //int ber_trial =  gsl_ran_bernoulli (r,p_ber); // return 1 if a change is to happen
     int ber_trial = rbern(p_ber, rng_arg); 
-    int base_proposed=0;// any output of 0 would indicate a mistake
+    int base_proposed = 0;// any output of 0 would indicate a mistake
     
     
-    switch(int (ber_trial ==1)){
-    case 1:{ // randomly choose one among other 3
-      switch(con_seq.at(j)){
-    case 1:{
-      int type = runif_int(0, 2, rng_arg);
-      switch(type){
-      case 0:{
-        base_proposed = 2;
-        break;
-      }
-      case 1:{
-        base_proposed = 3;
-        break;
-      }
-      case 2:{
-        base_proposed = 4;
-        break;
-      }
-      }
-      break;
-    }
-    case 2:{
-      int type = runif_int(0, 2, rng_arg);
+    switch(int (ber_trial ==1)) {
+    	
+	    case 1: { // randomly choose one among other 3
+      		cerr << "case 1: making a change to the sequence\n"; // ###
+		cerr << "now switch based on current base of con_seq\n"; // ###
+		switch(con_seq.at(j)) {
+    		    
+		    case 1: {
+		        int type = runif_int(0, 2, rng_arg);
+	        
+			    switch(type) {
+       		    
+		    		case 0: {
+        			    base_proposed = 2;
+        			    break;
+      		    		}
+      		    
+		    		case 1: {
+        			    base_proposed = 3;
+        			    break;
+      		    		}
       
-      switch(type){
-      case 0:{
-        base_proposed = 1;
-        break;
-      }
-      case 1:{
-        base_proposed = 3;
-        break;
-      }
-      case 2:{
-        base_proposed = 4;
-        break;
-      }
-      }
-      break;
-    }
-    case 3:{
-      int type = runif_int(0, 2, rng_arg);
-      switch(type){
-      case 0:{
-        base_proposed = 1;
-        break;
-      }
-      case 1:{
-        base_proposed = 2;
-        break;
-      }
-      case 2:{
-        base_proposed = 4;
-        break;
-      }
-      }
-      break;
-    }
-    case 4:{
-      int type = runif_int(0, 2, rng_arg);
-      switch(type){
-      case 0:{
-        base_proposed = 1;
-        break;
-      }
-      case 1:{
-        base_proposed = 2;
-        break;
-      }
-      case 2:{
-        base_proposed = 3;
-        break;
-      }
-      }
-      break;
-    }
-    }
+	    			case 2: {
+        			    base_proposed = 4;
+        			    break;
+      				}
+      			    }
+      			break;
+    		    }
+
+		    case 2: {
+			int type = runif_int(0, 2, rng_arg);
+	      
+			switch(type) {
+			    case 0: {
+				base_proposed = 1;
+				break;
+			    }
+			    case 1: {
+				base_proposed = 3;
+				break;
+			    }
+			    case 2: {
+				base_proposed = 4;
+				break;
+			    }
+			}
+			break;
+		    }
+
+		    case 3: {
+			int type = runif_int(0, 2, rng_arg);
+			switch(type) {
+			    case 0: {
+				base_proposed = 1;
+				break;
+			    }
+			    case 1: {
+				base_proposed = 2;
+				break;
+			    }
+			    case 2: {
+				base_proposed = 4;
+				break;
+			    }
+			}
+			break;
+		    }
+
+		    case 4: {
+			int type = runif_int(0, 2, rng_arg);
+			switch(type) {
+			    case 0: {
+				base_proposed = 1;
+				break;
+			    }
+			    case 1: {
+				base_proposed = 2;
+				break;
+			    }
+			    case 2: {
+				base_proposed = 3;
+				break;
+			    }
+			}
+			break;
+		    }
+          	}   
       
-      seq_proposed.at(j) = base_proposed;
+      		seq_proposed.at(j) = base_proposed;
       
-      break;
-    }
-    case 0:{
-      seq_proposed.at(j) = con_seq.at(j); // same as consensus seq
-      break;
-    }
-    }
-  }
+      		break;
+    	    }
+    
+            case 0: {
+		cerr << "case 0: no change will happen to the sequence\n"; // ###
+		cerr << "update seq_proposed[j] to be same as con_seq[j]\n"; // ###
+	    	seq_proposed.at(j) = con_seq.at(j); // same as consensus seq
+	    	break;
+    	    }
+    } //end of ber_trial==1 switch statement
+  } //end of for loop
   
-}
+} //end of function
 
 /*-------------------------------------------------------*/
 
