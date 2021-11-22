@@ -10653,7 +10653,7 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
   
   vector<int> ind_sample (NLIMIT, 0); // indicate if the sample a sampled case  has been included
   
-  cerr << ">>> Iterate through subjects in xi_E"; // ###
+  cerr << ">>> Iterate through subjects in xi_E\n"; // ###
 
   for (int i=0; i<=(int) xi_E_sort.size() -1 ; i++) {
     
@@ -10706,8 +10706,11 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
 	case 1: {// bg
 	    cerr << "case 1\n"; // ###
 	    vector<int> seq_new(para_other.n_base);
+	    cerr << "SUCCESS: " << "vector<int> seq_new(para_other.n_base)\n"; // ###
 	    sample_snull(con_seq, seq_new, para_current.p_ber, para_other.n_base, rng);
+	    cerr << "SUCCESS: " << "sample_snull(con_seq, seq_new, para_current.p_ber, para_other.n_base, rng)\n"; // ###
 	    nt_data_current.nt.at(subject).insert(nt_data_current.nt.at(subject).begin(),seq_new.begin(), seq_new.begin()+para_other.n_base);
+	    cerr << "SUCCESS: " << "nt_data_current.nt.at(subject).insert(nt_data_current.nt.at(subject).begin(),seq_new.begin(), seq_new.begin()+para_other.n_base)\n"; // ###
 	    break;
     	}
     }
@@ -12888,7 +12891,7 @@ Rcpp::List infer_cpp() {
   /*- int main -----------------*/
   /*----------------------------*/
 
-  cerr << ">>> C: infer_cpp()...\n"; // ###
+  cerr << ">>> C: infer_cpp()...\n"; // 0###
 
 	ifstream myfile_in; //recycled instream (not in loops)
 	ofstream myfile_out; //recycled outstream (not in loops)
