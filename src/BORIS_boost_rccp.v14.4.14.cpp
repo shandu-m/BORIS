@@ -13198,6 +13198,7 @@ Rcpp::List infer_cpp() {
 	lh_square_current.movest_sum_U.assign(para_other.n, 0.0);
 	lh_square_current.movest_sum_E.assign(para_other.n, 0.0);
 	lh_square_current.moves_sum_E.assign(para_other.n, 0.0);
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	vector < vector<double> > kernel_mat_current(NLIMIT, vector<double>(NLIMIT)); // a dynamic matrix contain the "kernel distance"
 	vector <double> norm_const_current(NLIMIT);
@@ -13206,6 +13207,7 @@ Rcpp::List infer_cpp() {
 	vector < vector<double> > delta_mat_mov_current(NLIMIT, vector<double>(NLIMIT)); // a dynamic matrix contain the movt "exposure time delta, dt between i and j"
 	vector<double> beta_ij_inf_current(NLIMIT, 1.0); // the "covariate pattern" effect on infectivity, normalised
 	vector<double> beta_ij_susc_current(NLIMIT, 1.0); // the "covariate pattern" effect on susceptibility, normalised
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	FUNC func_mcmc;
 	initialize_mcmc(para_init, para_current, para_other, para_priorsetc, xi_I_current, xi_U_current, xi_E_current, xi_E_minus_current, xi_R_current, xi_EnI_current, xi_EnIS_current, xi_InR_current, t_e_current, t_i_current, t_r_current, index_current, infected_source_current, kernel_mat_current, norm_const_current, sample_data, t_onset, nt_data_current, con_seq_current, beta_ij_mat_current); // initialze the parameters/unobserved data for mcmc
@@ -13230,6 +13232,7 @@ Rcpp::List infer_cpp() {
 	}
 	*/
 	func_mcmc.initialize_lh_square(lh_square_current, kernel_mat_current, delta_mat_current, norm_const_current, nt_data_current, con_seq_current, beta_ij_mat_current, moves, para_priorsetc, delta_mat_mov_current); //initialize lh_square
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 
 	double log_lh_current = log_lh_func(lh_square_current, para_other.n); // initialization of log-likelihood value
@@ -13338,6 +13341,7 @@ Rcpp::List infer_cpp() {
 		myfile_out.close();
 
 	}
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	//-------------------
 	int total_count_1_initial, total_count_2_initial, total_count_3_initial;
@@ -13491,6 +13495,7 @@ Rcpp::List infer_cpp() {
 		myfile8_out.open((string(PATH2) + string(getenv("SLURM_ARRAY_TASK_ID")) + string("_") + string("sample_percentage.csv")).c_str(), ios::app);
 	}
 
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	vector<int> list_update; // would contain the subjects (descended from subject_proposed below) whose FIRST sequence would be updated, with a sequential order (i.e., level-wise and time-wise) of updating (note: as each event needed to be updated corresponds to an infection event, it would be sufficient to update the first sequence of necessary subjects so as to update all downstream seq)
 	list_update.reserve(1);
@@ -13501,6 +13506,9 @@ Rcpp::List infer_cpp() {
 
 
 	double corr, coverage, sample_percentage;
+
+  cerr << "reached line " << __LINE__ << "\n"; // ###
+
 
 	// the MCMC iterations (+10 for Tracer log output):
 	for (int i = 0; i < (n_iter + 10); i++) {
