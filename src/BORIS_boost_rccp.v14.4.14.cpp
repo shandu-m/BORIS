@@ -12890,15 +12890,11 @@ Rcpp::List infer_cpp() {
 	ind_n_base_part = para_priorsetc.ind_n_base_part;// =1 if the seq data is partial
 	n_base_part = para_priorsetc.n_base_part; // the partial length used if ind_n_base_part =1
 
-  cerr << "reached line " << __LINE__ << "\n"; // ###
-
 	para_key_init para_init;
 	IO_parakeyinit(para_init);
 
 	para_scaling_factors para_scalingfactors;
 	IO_parascalingfactors(para_scalingfactors);
-
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	para_aux para_other;
 	IO_para_aux(para_other);  //Importing parameters
@@ -12909,8 +12905,6 @@ Rcpp::List infer_cpp() {
 	opt_mov = para_other.opt_mov;
 	debug = para_other.debug;
 
-  cerr << "reached line " << __LINE__ << "\n"; // ###
-
 	epi_struct epi_final;
 	nt_struct nt_data;
 	moves_struct moves;
@@ -12919,8 +12913,6 @@ Rcpp::List infer_cpp() {
 	vector < vector<double> > coordinate(NLIMIT, vector<double>(2));
 	vector<int> con_seq, con_seq_estm;
 	IO_data(para_other, coordinate, epi_final, nt_data, index, con_seq_estm, seeds, moves); //Importing  data
-
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 
 	// set a universal seed
@@ -12952,15 +12944,12 @@ Rcpp::List infer_cpp() {
 
 	rng_type rng(seed); //set a universal seed
 
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	vec2int sample_data; // 2-d vector contains the sampled sequences; non-sampled premises would have unexpected values
 	sample_data.resize(NLIMIT);
 	for (int i = 0; i <= (NLIMIT - 1); i++) {
 		sample_data[i].reserve(SEQLLIMIT);
 	}
-
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 
 	string line, field;
@@ -12985,7 +12974,6 @@ Rcpp::List infer_cpp() {
 	}// end while for getline
 	myfile_in.close();
 
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	// upload the true infected sources vector
 	vector<int> atab_from; // vector to hold true sources (from accuracy table comparison file)
@@ -12993,7 +12981,6 @@ Rcpp::List infer_cpp() {
 	myfile_in.open((string(PATH1) + string("atab_from.csv")).c_str(), ios::in);
 	line_count = 0;
   
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 	
   while (getline(myfile_in, line)) {
 
@@ -13018,8 +13005,6 @@ Rcpp::List infer_cpp() {
 		myfile_out.close();
 	}
 
-  cerr << "reached line " << __LINE__ << "\n"; // ###
-
 
 	if (debug == 1) {
 		for (int i = 0; i <= (para_other.n - 1); i++) {
@@ -13036,8 +13021,6 @@ Rcpp::List infer_cpp() {
 		}
 	}
 
-  cerr << "reached line " << __LINE__ << "\n"; // ###
-
 	/*----------------------------*/
 
 	vector<int> xi_U, xi_E, xi_E_minus, xi_I, xi_R, xi_EnI, xi_EnIS, xi_InR; // indices sets indicating the individuals stay in S OR have gone through the other classes (E OR I OR R), and individuals hve gone through E but not I (EnI) and I but not R (InR)
@@ -13053,8 +13036,6 @@ Rcpp::List infer_cpp() {
 	xi_EnIS.reserve(NLIMIT);
 	xi_InR.reserve(NLIMIT);
 	xi_beta_E.reserve(NLIMIT);
-
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 
 	for (int i = 0; i <= (para_other.n - 1); i++) {
@@ -13089,8 +13070,6 @@ Rcpp::List infer_cpp() {
 		if ((epi_final.infected_source.at(i) != 9999) & (epi_final.infected_source.at(i) != -99)) xi_beta_E.push_back(i);
 	}
 
-  cerr << "reached line " << __LINE__ << "\n"; // ###
-
 
 	/*----------------------------*/
 
@@ -13121,7 +13100,6 @@ Rcpp::List infer_cpp() {
 	lh_square.movest_sum_E.assign(para_other.n, 0); //count of moves to those exposed before tmax, time dependent
 	lh_square.moves_sum_E.assign(para_other.n, 0);  //count of moves to those exposed before tmax, ignoring time
 
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	/*--------------------------------Start of MCMC sampling------------------------------------------*/
 
@@ -13177,8 +13155,6 @@ Rcpp::List infer_cpp() {
 
 	//Note: struct copy is fragile: nt_data_current=nt_data wont work!!//
 
-  cerr << "reached line " << __LINE__ << "\n"; // ###
-
 	lh_SQUARE lh_square_current;
 	lh_square_current.f_U.assign(para_other.n, 1.0);
 	lh_square_current.q_T.assign(para_other.n, 0.0);
@@ -13198,7 +13174,6 @@ Rcpp::List infer_cpp() {
 	lh_square_current.movest_sum_U.assign(para_other.n, 0.0);
 	lh_square_current.movest_sum_E.assign(para_other.n, 0.0);
 	lh_square_current.moves_sum_E.assign(para_other.n, 0.0);
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	vector < vector<double> > kernel_mat_current(NLIMIT, vector<double>(NLIMIT)); // a dynamic matrix contain the "kernel distance"
 	vector <double> norm_const_current(NLIMIT);
@@ -13207,23 +13182,32 @@ Rcpp::List infer_cpp() {
 	vector < vector<double> > delta_mat_mov_current(NLIMIT, vector<double>(NLIMIT)); // a dynamic matrix contain the movt "exposure time delta, dt between i and j"
 	vector<double> beta_ij_inf_current(NLIMIT, 1.0); // the "covariate pattern" effect on infectivity, normalised
 	vector<double> beta_ij_susc_current(NLIMIT, 1.0); // the "covariate pattern" effect on susceptibility, normalised
+
   cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	FUNC func_mcmc;
+  cerr << "reached line " << __LINE__ << "\n"; // ###
+
 	initialize_mcmc(para_init, para_current, para_other, para_priorsetc, xi_I_current, xi_U_current, xi_E_current, xi_E_minus_current, xi_R_current, xi_EnI_current, xi_EnIS_current, xi_InR_current, t_e_current, t_i_current, t_r_current, index_current, infected_source_current, kernel_mat_current, norm_const_current, sample_data, t_onset, nt_data_current, con_seq_current, beta_ij_mat_current); // initialze the parameters/unobserved data for mcmc
 	//if (debug == 1) {
 	//	for (int i = 0; i <= ((int)para_other.n - 1); i++) {
 	//		cout << "t_i-e: " << t_i_current.at(i) - t_e_current.at(i) << "t_e: " << t_e_current.at(i) << " t_i: " << t_i_current.at(i) << endl;
 	//	}
 	//}
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	func_mcmc.set_para(para_current, para_other, coordinate, xi_U_current, xi_E_current, xi_E_minus_current, xi_I_current, xi_R_current, xi_EnI_current, xi_InR_current, t_e_current, t_i_current, t_r_current, index_current, infected_source_current);
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 	func_mcmc.initialize_kernel_mat(kernel_mat_current, norm_const_current); // initialize the kernel matrix
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 	func_mcmc.initialize_delta_mat(delta_mat_current); // initialize the exposure time matrix
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 	func_mcmc.initialize_delta_mat_mov(delta_mat_mov_current, moves); //initialise the movement exposure time matrix
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 	if (opt_betaij <= 1) {
 		func_mcmc.initialize_beta_ij_mat(beta_ij_mat_current, epi_final.herdn, epi_final.ftype0, epi_final.ftype1, epi_final.ftype2); // initialize the covariate matrix
 	}
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 	/*
 	if (opt_betaij >= 2) {
 		func_mcmc.initialize_beta_ij_mat_inf(beta_ij_inf_current, epi_final.herdn, epi_final.ftype0, epi_final.ftype1, epi_final.ftype2);
@@ -13231,6 +13215,7 @@ Rcpp::List infer_cpp() {
 		func_mcmc.initialize_beta_ij_mat_norm(beta_ij_mat_current, beta_ij_inf_current, beta_ij_susc_current);
 	}
 	*/
+  cerr << "reached line " << __LINE__ << "\n"; // ###
 	func_mcmc.initialize_lh_square(lh_square_current, kernel_mat_current, delta_mat_current, norm_const_current, nt_data_current, con_seq_current, beta_ij_mat_current, moves, para_priorsetc, delta_mat_mov_current); //initialize lh_square
   cerr << "reached line " << __LINE__ << "\n"; // ###
 
@@ -13341,7 +13326,6 @@ Rcpp::List infer_cpp() {
 		myfile_out.close();
 
 	}
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	//-------------------
 	int total_count_1_initial, total_count_2_initial, total_count_3_initial;
@@ -13495,8 +13479,6 @@ Rcpp::List infer_cpp() {
 		myfile8_out.open((string(PATH2) + string(getenv("SLURM_ARRAY_TASK_ID")) + string("_") + string("sample_percentage.csv")).c_str(), ios::app);
 	}
 
-  cerr << "reached line " << __LINE__ << "\n"; // ###
-
 	vector<int> list_update; // would contain the subjects (descended from subject_proposed below) whose FIRST sequence would be updated, with a sequential order (i.e., level-wise and time-wise) of updating (note: as each event needed to be updated corresponds to an infection event, it would be sufficient to update the first sequence of necessary subjects so as to update all downstream seq)
 	list_update.reserve(1);
 
@@ -13506,9 +13488,6 @@ Rcpp::List infer_cpp() {
 
 
 	double corr, coverage, sample_percentage;
-
-  cerr << "reached line " << __LINE__ << "\n"; // ###
-
 
 	// the MCMC iterations (+10 for Tracer log output):
 	for (int i = 0; i < (n_iter + 10); i++) {
@@ -13648,7 +13627,6 @@ Rcpp::List infer_cpp() {
 
 
 		}
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 		//------------------
 		//sf console output
