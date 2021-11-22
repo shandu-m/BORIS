@@ -10334,12 +10334,6 @@ void mcmc_UPDATE::index_first_seq(lh_SQUARE& lh_square_current_arg, double& log_
 
 void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux& para_other, para_priors_etc& para_priors_etc, vector<int>& xi_I_current, vector<int>& xi_U_current, vector<int>& xi_E_current, vector<int>& xi_E_minus_current, vector<int>& xi_R_current,  vector<int>& xi_EnI_current,  vector<int>& xi_EnIS_current,  vector<int>& xi_InR_current,  vector<double>& t_e_current, vector<double>& t_i_current, vector<double>& t_r_current, vector<int>& index_current, vector<int>& infected_source_current, vector < vector<double> >& kernel_mat_current, vector <double>& norm_const_current, vec2int& sample_data, vector<double>& t_onset, nt_struct& nt_data_current, vector<int>& con_seq, vector < vector<double> >& beta_ij_mat_current){
   
-  //-----------------------------------------------------------------------------|
-  //
-  //.PUT SOME BIG BAD PRINT STATEMENTS IN HERE!!!!!!>>>>><<>?S<><><<><><<>><<>><
-  //
-  //----------------------------------------------------------------------------
-
 
   //const gsl_rng_type* T= gsl_rng_default;  // T is pointer points to the type of generator
   //gsl_rng *r = gsl_rng_alloc (T); // r is pointer points to an object with Type T
@@ -10385,7 +10379,6 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
   para_current.beta_m = para_init.beta_m; //initialization of parameter to be estimated
   
   //--------
-  cerr << __LINE__ << ": finished initializing para_current with para_init\n"; // ###
   
   nt_data_current.t_nt.resize(para_other.n);
   nt_data_current.nt.resize(para_other.n);
@@ -10393,9 +10386,6 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
   nt_data_current.current_size.resize(para_other.n);
   nt_data_current.infecting_size.resize(para_other.n);
   nt_data_current.infecting_list.resize(para_other.n);
-
-  cerr << __LINE__ << ": finished resizing nt_data_current\n"; // ###
-
   
   for (int i=0; i<= (int)(para_other.n-1);i++){
     nt_data_current.t_nt.at(i).clear();
@@ -10408,8 +10398,6 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
     
   }
   
-  cerr << __LINE__ << ": finished clearing some values in nt_data_current\n"; // ###
-
   
   
   //---------------------------------------------------------------------------------------//*/
@@ -10437,8 +10425,6 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
   
   //--
   
-  cerr << __LINE__ << ": finished first loop over infections\n"; // ###
-
 
   for (int i=0; i<= (int)(xi_E_current.size()-1);i++){// loop over infections
     
@@ -10573,8 +10559,6 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
     
   }// end of loop over infections
   
-  cerr << __LINE__ << ": finished second loop over infections\n"; // ###
-  
   ////----initialization of index_current and xi_E_minus --///
   
   index_current.clear();
@@ -10590,8 +10574,6 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
     xi_E_minus_current.erase(find(xi_E_minus_current.begin(),xi_E_minus_current.end(),index_current.at(i)));
   }
 
-  cerr << __LINE__ << ": finished initialization of index_current and xi_E_minus\n"; // ###  
-  
   /*
    myfile_out.open((string(PATH2)+string("initial_index.csv")).c_str(),ios::app);
    for (int i=0; i<= (int) (index_current.size()-1);i++){
@@ -10643,16 +10625,10 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
     if (t_e_current.at(xi_E_current.at(i))!=para_other.unassigned_time)  t_e_sort.push_back(t_e_current.at(xi_E_current.at(i)));
   }
 
-  cerr << __LINE__; // ###  
-  
   sort( t_e_sort.begin(),  t_e_sort.end());
 
-  cerr << __LINE__; // ###
-  
   vector<int> xi_E_sort((int) xi_E_current.size());
 
-  cerr << __LINE__; // ###
-  
   for (int i=0; i<=(int) xi_E_current.size() -1 ; i++){
     
     int rank_t = (int)(distance(t_e_sort.begin(), find(t_e_sort.begin(),t_e_sort.end(), t_e_current.at(xi_E_current.at(i))) ));
@@ -10660,8 +10636,6 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
     xi_E_sort.at(rank_t) = xi_E_current.at(i);
   }
 
-  cerr << __LINE__; // ###
-  
   /*
    myfile_out.open((string(PATH2)+string("xi_E_sort_initial.csv")).c_str(),ios::out);
    for (int i=0; i<=((int)xi_E_sort.size()-1);i++){
@@ -10679,9 +10653,9 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
   
   vector<int> ind_sample (NLIMIT, 0); // indicate if the sample a sampled case  has been included
   
-  cerr << __LINE__; // ###
-  
-  for (int i=0; i<=(int) xi_E_sort.size() -1 ; i++){
+  cerr << ">>> Iterate through subjects in xi_E"; // ###
+
+  for (int i=0; i<=(int) xi_E_sort.size() -1 ; i++) {
     
     int subject = xi_E_sort.at(i);
     int source = infected_source_current.at(subject);
@@ -10694,50 +10668,52 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
     
     
     switch(int (source==9999)) {
-    case 0:{// secondary
-      switch(int (nt_data_current.t_sample.at(source)==para_other.unassigned_time)){
-    case 1:{// source has no sample
-      seq_initialize_pair(nt_data_current, source, subject, t_e_current.at(subject), para_other.n_base, para_current);
-      
-      
-      break;
+       
+	case 0: {// secondary
+
+	    switch(int (nt_data_current.t_sample.at(source)==para_other.unassigned_time)) {
+	        
+		case 1: {// source has no sample
+		    cerr << "case 0-1\n"; // ###
+		    seq_initialize_pair(nt_data_current, source, subject, t_e_current.at(subject), para_other.n_base, para_current);
+		    break;
+		}
+
+    		case 0: {// source has sample
+		    
+		    switch((nt_data_current.t_sample.at(source)<= t_e_current.at(subject)) & (ind_sample.at(source)==0)) {
+	    
+		    	case 1: { // has to insert sample first
+			    cerr << "case 0-0-1\n"; // ###
+			    nt_data_current.nt.at(source).insert(nt_data_current.nt.at(source).end(),sample_data.at(source).begin(), sample_data.at(source).end());
+			    ind_sample.at(source) = 1;
+			    seq_initialize_pair(nt_data_current, source, subject, t_e_current.at(subject), para_other.n_base, para_current);
+			    break;
+	    		}
+	    		
+			case 0: {
+			    cerr << "case 0-0-0\n"; // ###
+	      		    seq_initialize_pair(nt_data_current, source, subject, t_e_current.at(subject), para_other.n_base, para_current);
+			    break;
+	    		}
+    		    }
+		    break;
+    		}
+    	    }
+      	    break;
+	}
+		
+	case 1: {// bg
+	    cerr << "case 1\n"; // ###
+	    vector<int> seq_new(para_other.n_base);
+	    sample_snull(con_seq, seq_new, para_current.p_ber, para_other.n_base, rng);
+	    nt_data_current.nt.at(subject).insert(nt_data_current.nt.at(subject).begin(),seq_new.begin(), seq_new.begin()+para_other.n_base);
+	    break;
+    	}
     }
-    case 0:{// source has sample
-      switch((nt_data_current.t_sample.at(source)<= t_e_current.at(subject)) & (ind_sample.at(source)==0)){
-    case 1:{ // has to insert sample first
-      nt_data_current.nt.at(source).insert(nt_data_current.nt.at(source).end(),sample_data.at(source).begin(), sample_data.at(source).end());
-      ind_sample.at(source) = 1;
-      seq_initialize_pair(nt_data_current, source, subject, t_e_current.at(subject), para_other.n_base, para_current);
-      
-      
-      
-      break;
-    }
-    case 0:{
-      seq_initialize_pair(nt_data_current, source, subject, t_e_current.at(subject), para_other.n_base, para_current);
-      
-      break;
-    }
-    }
-      break;
-    }
-    }
-      break;
-    }
-    case 1:{// bg
-      
-      vector<int> seq_new(para_other.n_base);
-      sample_snull(con_seq, seq_new, para_current.p_ber, para_other.n_base, rng);
-      nt_data_current.nt.at(subject).insert(nt_data_current.nt.at(subject).begin(),seq_new.begin(), seq_new.begin()+para_other.n_base);
-      
-      
-      break;
-    }
-    }
+  
   }
   
-  cerr << __LINE__; // ###
-
   for (int i=0; i<=(int) xi_E_sort.size() -1 ; i++){
     
     int subject = xi_E_sort.at(i);
@@ -13215,10 +13191,8 @@ Rcpp::List infer_cpp() {
 	vector<double> beta_ij_inf_current(NLIMIT, 1.0); // the "covariate pattern" effect on infectivity, normalised
 	vector<double> beta_ij_susc_current(NLIMIT, 1.0); // the "covariate pattern" effect on susceptibility, normalised
 
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	FUNC func_mcmc;
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	initialize_mcmc(para_init, para_current, para_other, para_priorsetc, xi_I_current, xi_U_current, xi_E_current, xi_E_minus_current, xi_R_current, xi_EnI_current, xi_EnIS_current, xi_InR_current, t_e_current, t_i_current, t_r_current, index_current, infected_source_current, kernel_mat_current, norm_const_current, sample_data, t_onset, nt_data_current, con_seq_current, beta_ij_mat_current); // initialze the parameters/unobserved data for mcmc
 	//if (debug == 1) {
@@ -13226,20 +13200,14 @@ Rcpp::List infer_cpp() {
 	//		cout << "t_i-e: " << t_i_current.at(i) - t_e_current.at(i) << "t_e: " << t_e_current.at(i) << " t_i: " << t_i_current.at(i) << endl;
 	//	}
 	//}
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 	func_mcmc.set_para(para_current, para_other, coordinate, xi_U_current, xi_E_current, xi_E_minus_current, xi_I_current, xi_R_current, xi_EnI_current, xi_InR_current, t_e_current, t_i_current, t_r_current, index_current, infected_source_current);
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 	func_mcmc.initialize_kernel_mat(kernel_mat_current, norm_const_current); // initialize the kernel matrix
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 	func_mcmc.initialize_delta_mat(delta_mat_current); // initialize the exposure time matrix
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 	func_mcmc.initialize_delta_mat_mov(delta_mat_mov_current, moves); //initialise the movement exposure time matrix
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 	if (opt_betaij <= 1) {
 		func_mcmc.initialize_beta_ij_mat(beta_ij_mat_current, epi_final.herdn, epi_final.ftype0, epi_final.ftype1, epi_final.ftype2); // initialize the covariate matrix
 	}
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 	/*
 	if (opt_betaij >= 2) {
 		func_mcmc.initialize_beta_ij_mat_inf(beta_ij_inf_current, epi_final.herdn, epi_final.ftype0, epi_final.ftype1, epi_final.ftype2);
@@ -13247,9 +13215,7 @@ Rcpp::List infer_cpp() {
 		func_mcmc.initialize_beta_ij_mat_norm(beta_ij_mat_current, beta_ij_inf_current, beta_ij_susc_current);
 	}
 	*/
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 	func_mcmc.initialize_lh_square(lh_square_current, kernel_mat_current, delta_mat_current, norm_const_current, nt_data_current, con_seq_current, beta_ij_mat_current, moves, para_priorsetc, delta_mat_mov_current); //initialize lh_square
-  cerr << "reached line " << __LINE__ << "\n"; // ###
 
 
 	double log_lh_current = log_lh_func(lh_square_current, para_other.n); // initialization of log-likelihood value
