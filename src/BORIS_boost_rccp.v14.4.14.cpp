@@ -10334,9 +10334,17 @@ void mcmc_UPDATE::index_first_seq(lh_SQUARE& lh_square_current_arg, double& log_
 
 void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux& para_other, para_priors_etc& para_priors_etc, vector<int>& xi_I_current, vector<int>& xi_U_current, vector<int>& xi_E_current, vector<int>& xi_E_minus_current, vector<int>& xi_R_current,  vector<int>& xi_EnI_current,  vector<int>& xi_EnIS_current,  vector<int>& xi_InR_current,  vector<double>& t_e_current, vector<double>& t_i_current, vector<double>& t_r_current, vector<int>& index_current, vector<int>& infected_source_current, vector < vector<double> >& kernel_mat_current, vector <double>& norm_const_current, vec2int& sample_data, vector<double>& t_onset, nt_struct& nt_data_current, vector<int>& con_seq, vector < vector<double> >& beta_ij_mat_current){
   
-  
+  //-----------------------------------------------------------------------------|
+  //
+  //.PUT SOME BIG BAD PRINT STATEMENTS IN HERE!!!!!!>>>>><<>?S<><><<><><<>><<>><
+  //
+  //----------------------------------------------------------------------------
+
+
   //const gsl_rng_type* T= gsl_rng_default;  // T is pointer points to the type of generator
   //gsl_rng *r = gsl_rng_alloc (T); // r is pointer points to an object with Type T
+  
+  cerr << ">>> initialize_mcmc\n"; // ###  
   
   int seed_intial_mcmc = 1;  //1,999,-1000,-10000,123456
   
@@ -10377,6 +10385,7 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
   para_current.beta_m = para_init.beta_m; //initialization of parameter to be estimated
   
   //--------
+  cerr << __LINE__ << ": finished initializing para_current with para_init\n"; // ###
   
   nt_data_current.t_nt.resize(para_other.n);
   nt_data_current.nt.resize(para_other.n);
@@ -10384,6 +10393,9 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
   nt_data_current.current_size.resize(para_other.n);
   nt_data_current.infecting_size.resize(para_other.n);
   nt_data_current.infecting_list.resize(para_other.n);
+
+  cerr << __LINE__ << ": finished resizing nt_data_current\n"; // ###
+
   
   for (int i=0; i<= (int)(para_other.n-1);i++){
     nt_data_current.t_nt.at(i).clear();
@@ -10396,6 +10408,8 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
     
   }
   
+  cerr << __LINE__ << ": finished clearing some values in nt_data_current\n"; // ###
+
   
   
   //---------------------------------------------------------------------------------------//*/
@@ -10423,6 +10437,9 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
   
   //--
   
+  cerr << __LINE__ << ": finished first loop over infections\n"; // ###
+
+
   for (int i=0; i<= (int)(xi_E_current.size()-1);i++){// loop over infections
     
     int source;
@@ -10556,6 +10573,7 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
     
   }// end of loop over infections
   
+  cerr << __LINE__ << ": finished second loop over infections\n"; // ###
   
   ////----initialization of index_current and xi_E_minus --///
   
@@ -10571,6 +10589,8 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
   for (int i=0; i<= (int)(index_current.size()-1);i++){
     xi_E_minus_current.erase(find(xi_E_minus_current.begin(),xi_E_minus_current.end(),index_current.at(i)));
   }
+
+  cerr << __LINE__ << ": finished initialization of index_current and xi_E_minus\n"; // ###  
   
   /*
    myfile_out.open((string(PATH2)+string("initial_index.csv")).c_str(),ios::app);
@@ -10622,10 +10642,16 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
   for (int i=0; i<=(int) xi_E_current.size() -1 ; i++){
     if (t_e_current.at(xi_E_current.at(i))!=para_other.unassigned_time)  t_e_sort.push_back(t_e_current.at(xi_E_current.at(i)));
   }
+
+  cerr << __LINE__; // ###  
   
   sort( t_e_sort.begin(),  t_e_sort.end());
+
+  cerr << __LINE__; // ###
   
   vector<int> xi_E_sort((int) xi_E_current.size());
+
+  cerr << __LINE__; // ###
   
   for (int i=0; i<=(int) xi_E_current.size() -1 ; i++){
     
@@ -10633,6 +10659,8 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
     
     xi_E_sort.at(rank_t) = xi_E_current.at(i);
   }
+
+  cerr << __LINE__; // ###
   
   /*
    myfile_out.open((string(PATH2)+string("xi_E_sort_initial.csv")).c_str(),ios::out);
@@ -10651,6 +10679,7 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
   
   vector<int> ind_sample (NLIMIT, 0); // indicate if the sample a sampled case  has been included
   
+  cerr << __LINE__; // ###
   
   for (int i=0; i<=(int) xi_E_sort.size() -1 ; i++){
     
@@ -10707,7 +10736,8 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
     }
   }
   
-  
+  cerr << __LINE__; // ###
+
   for (int i=0; i<=(int) xi_E_sort.size() -1 ; i++){
     
     int subject = xi_E_sort.at(i);
@@ -10727,6 +10757,8 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
     }
     
   }
+
+  cerr << ">>>> done."; // ###
   
   
   //---------------------end of  intialization of nt_data_current.nt-------------------------//
