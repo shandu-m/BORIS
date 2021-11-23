@@ -1737,9 +1737,7 @@ inline double lh_snull_base(const int& con_base, const int& base, const double& 
 inline void sample_snull (const vector<int>& con_seq, vector<int>& seq_proposed, const double& p_ber, const int& n_base, rng_type & rng_arg){ //sample a seq for background
   cerr << "\t>>>> sample_snull\n"; // ###
   cerr << "seq_proposed (" << seq_proposed.size() << ") "; // ###
-  cerr << seq_proposed << "\n"; // ###
   cerr << "con_seq (" << con_seq.size() << ") "; // ###
-  cerr << con_seq << "\n"; // ###
   
   for (int j=0; j<=(n_base-1); j++) {
     
