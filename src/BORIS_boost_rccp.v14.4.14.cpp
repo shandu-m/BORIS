@@ -1735,9 +1735,9 @@ inline double lh_snull_base(const int& con_base, const int& base, const double& 
 /*-------------------------------------------------------*/
 
 inline void sample_snull (const vector<int>& con_seq, vector<int>& seq_proposed, const double& p_ber, const int& n_base, rng_type & rng_arg){ //sample a seq for background
-  cerr << "\t>>>> sample_snull\n"; // ###
-  cerr << "seq_proposed (" << seq_proposed.size() << ") "; // ###
-  cerr << "con_seq (" << con_seq.size() << ") "; // ###
+  //cerr << "\t>>>> sample_snull\n"; // ###
+  //cerr << "seq_proposed (" << seq_proposed.size() << ") "; // ###
+  //cerr << "con_seq (" << con_seq.size() << ") "; // ###
   
   for (int j=0; j<=(n_base-1); j++) {
     
@@ -1748,8 +1748,8 @@ inline void sample_snull (const vector<int>& con_seq, vector<int>& seq_proposed,
     switch(int (ber_trial ==1)) {
     	
 	    case 1: { // randomly choose one among other 3
-      		cerr << "case 1: making a change to the sequence\n"; // ###
-		cerr << "now switch based on current base of con_seq\n"; // ###
+      		//cerr << "case 1: making a change to the sequence\n"; // ###
+		//cerr << "now switch based on current base of con_seq\n"; // ###
 		switch(con_seq.at(j)) {
     		    
 		    case 1: {
@@ -1834,17 +1834,17 @@ inline void sample_snull (const vector<int>& con_seq, vector<int>& seq_proposed,
 		    }
           	}   
       
-		cerr << "con_seq base: " << con_seq.at(j) << "\n"; // ###
-		cerr << "base_proposed: " << base_proposed << "\n"; // ###
+		//cerr << "con_seq base: " << con_seq.at(j) << "\n"; // ###
+		//cerr << "base_proposed: " << base_proposed << "\n"; // ###
       		seq_proposed.at(j) = base_proposed;
-		cerr << "updated seq_proposed\n"; // ###
+		//cerr << "updated seq_proposed\n"; // ###
       
       		break;
     	    }
     
             case 0: {
-		cerr << "case 0: no change will happen to the sequence\n"; // ###
-		cerr << "update seq_proposed[j] to be same as con_seq[j]\n"; // ###
+		//cerr << "case 0: no change will happen to the sequence\n"; // ###
+		//cerr << "update seq_proposed[j] to be same as con_seq[j]\n"; // ###
 	    	seq_proposed.at(j) = con_seq.at(j); // same as consensus seq
 	    	break;
     	    }
@@ -10357,7 +10357,7 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
   //const gsl_rng_type* T= gsl_rng_default;  // T is pointer points to the type of generator
   //gsl_rng *r = gsl_rng_alloc (T); // r is pointer points to an object with Type T
   
-  cerr << ">>> initialize_mcmc\n"; // ###  
+  //cerr << ">>> initialize_mcmc\n"; // ###  
   
   int seed_intial_mcmc = 1;  //1,999,-1000,-10000,123456
   
@@ -10672,7 +10672,7 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
   
   vector<int> ind_sample (NLIMIT, 0); // indicate if the sample a sampled case  has been included
   
-  cerr << ">>> Iterate through subjects in xi_E\n"; // ###
+  //cerr << ">>> Iterate through subjects in xi_E\n"; // ###
 
   for (int i=0; i<=(int) xi_E_sort.size() -1 ; i++) {
     
@@ -10693,7 +10693,7 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
 	    switch(int (nt_data_current.t_sample.at(source)==para_other.unassigned_time)) {
 	        
 		case 1: {// source has no sample
-		    cerr << "case 0-1\n"; // ###
+		    //cerr << "case 0-1\n"; // ###
 		    seq_initialize_pair(nt_data_current, source, subject, t_e_current.at(subject), para_other.n_base, para_current);
 		    break;
 		}
@@ -10703,7 +10703,7 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
 		    switch((nt_data_current.t_sample.at(source)<= t_e_current.at(subject)) & (ind_sample.at(source)==0)) {
 	    
 		    	case 1: { // has to insert sample first
-			    cerr << "case 0-0-1\n"; // ###
+			    //cerr << "case 0-0-1\n"; // ###
 			    nt_data_current.nt.at(source).insert(nt_data_current.nt.at(source).end(),sample_data.at(source).begin(), sample_data.at(source).end());
 			    ind_sample.at(source) = 1;
 			    seq_initialize_pair(nt_data_current, source, subject, t_e_current.at(subject), para_other.n_base, para_current);
@@ -10711,7 +10711,7 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
 	    		}
 	    		
 			case 0: {
-			    cerr << "case 0-0-0\n"; // ###
+			    //cerr << "case 0-0-0\n"; // ###
 	      		    seq_initialize_pair(nt_data_current, source, subject, t_e_current.at(subject), para_other.n_base, para_current);
 			    break;
 	    		}
@@ -10723,13 +10723,13 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
 	}
 		
 	case 1: {// bg
-	    cerr << "case 1\n"; // ###
+	    //cerr << "case 1\n"; // ###
 	    vector<int> seq_new(para_other.n_base);
-	    cerr << "SUCCESS: " << "vector<int> seq_new(para_other.n_base)\n"; // ###
+	    //cerr << "SUCCESS: " << "vector<int> seq_new(para_other.n_base)\n"; // ###
 	    sample_snull(con_seq, seq_new, para_current.p_ber, para_other.n_base, rng);
-	    cerr << "SUCCESS: " << "sample_snull(con_seq, seq_new, para_current.p_ber, para_other.n_base, rng)\n"; // ###
+	    //cerr << "SUCCESS: " << "sample_snull(con_seq, seq_new, para_current.p_ber, para_other.n_base, rng)\n"; // ###
 	    nt_data_current.nt.at(subject).insert(nt_data_current.nt.at(subject).begin(),seq_new.begin(), seq_new.begin()+para_other.n_base);
-	    cerr << "SUCCESS: " << "nt_data_current.nt.at(subject).insert(nt_data_current.nt.at(subject).begin(),seq_new.begin(), seq_new.begin()+para_other.n_base)\n"; // ###
+	    //cerr << "SUCCESS: " << "nt_data_current.nt.at(subject).insert(nt_data_current.nt.at(subject).begin(),seq_new.begin(), seq_new.begin()+para_other.n_base)\n"; // ###
 	    break;
     	}
     }
@@ -10756,7 +10756,7 @@ void initialize_mcmc(para_key_init& para_init, para_key& para_current, para_aux&
     
   }
 
-  cerr << ">>>> done."; // ###
+  //cerr << ">>>> done."; // ###
   
   
   //---------------------end of  intialization of nt_data_current.nt-------------------------//
