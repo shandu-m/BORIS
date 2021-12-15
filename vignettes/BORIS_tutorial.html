@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Simon Firestone" />
+
+
+<title>Simulation and Inference with BORIS</title>
+
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Simulation and Inference with BORIS</h1>
+<h4 class="author">Simon Firestone</h4>
+<h4 class="date">15/12/2021</h4>
+
+
+
+<div style="page-break-after: always;"></div>
+<div id="outbreak-simulation-with-boris" class="section level2">
+<h2>Outbreak simulation with BORIS</h2>
+<p>In this example, we will:</p>
+<ol style="list-style-type: decimal">
+<li>Prepare the inputs for simulation</li>
+<li>Simulate an outbreak with corresponding genomic data</li>
+</ol>
+<div id="preparing-inputs-for-borissim" class="section level3">
+<h3>Preparing inputs for BORIS::sim()</h3>
+<p>The <strong>farm covariate data</strong> should be inputed as a dataframe as specified in the help for <code>data(sim.epi.input)</code>. In this example, at the start of the outbreak there is just one latently exposed individual (with <code>status = 2</code>), soon to become infectious. The rest of the individuals are susceptible (with <code>status = 1</code>). Outbreaks can be forward simulated based on data available at detection when some individuals are known to be infectious (<code>status = 3</code>) or even recovered (<code>status = 4</code>).</p>
+<p>An <strong>animal movement/contact-tracing dataset</strong> is required to be inputted as a dataframe as specified in the help for <code>data(sim.moves.input)</code>, irrespective of whether it is used (i.e. whether the option <code>parsAux$opt_mov</code> = 1 or = 0. This extension to the model is still under development. If <code>parsAux$opt_mov</code> is set to 0, you can just use the example dataset <code>data(sim.moves.input)</code>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BORIS)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(sim.epi.input)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sim.epi.input)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   k  coor_x   coor_y   t_e   t_i   t_r ftype0 ftype1 ftype2 herdn status</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0 144.901 -36.4348 0e+00 9e+06 9e+06      0      1      0  3209      2</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 1 144.924 -36.4288 9e+06 9e+06 9e+06      0      0      1  1705      1</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 2 144.924 -36.4288 9e+06 9e+06 9e+06      1      0      0   133      1</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 3 144.903 -36.4205 9e+06 9e+06 9e+06      1      0      0   213      1</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 4 144.907 -36.4179 9e+06 9e+06 9e+06      1      0      0   127      1</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 5 144.898 -36.4310 9e+06 9e+06 9e+06      0      0      1     6      1</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(sim.moves.input)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sim.moves.input)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   from_k to_k t_m</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      0    1   9</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      0    2   9</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      0    3   9</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4      0    4   9</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5      0    5   9</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6      0    6   9</span></span></code></pre></div>
+<div style="page-break-after: always;"></div>
+<p>Next, enter the key simulation parameters as follows. Details on the parameters can be found in the help for <code>data(sim.param.key)</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>para.key <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&#39;alpha&#39;</span> <span class="ot">=</span> <span class="fl">4e-4</span>,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;beta&#39;</span> <span class="ot">=</span> <span class="fl">0.2</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;mu_1&#39;</span> <span class="ot">=</span> <span class="fl">2e-05</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;mu_2&#39;</span> <span class="ot">=</span> <span class="fl">2e-06</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;a&#39;</span> <span class="ot">=</span> <span class="fl">3.0</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;b&#39;</span> <span class="ot">=</span> <span class="fl">2.5</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;c&#39;</span> <span class="ot">=</span> <span class="fl">21.0</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;d&#39;</span> <span class="ot">=</span> <span class="fl">4.0</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;k_1&#39;</span> <span class="ot">=</span> <span class="fl">1.7</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;p_ber&#39;</span> <span class="ot">=</span> <span class="fl">0.1</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;phi_inf1&#39;</span> <span class="ot">=</span> <span class="dv">3</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;phi_inf2&#39;</span> <span class="ot">=</span> <span class="fl">1.5</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;rho_susc1&#39;</span> <span class="ot">=</span> <span class="fl">0.4</span>,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;rho_susc2&#39;</span> <span class="ot">=</span> <span class="dv">2</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;nu_inf&#39;</span> <span class="ot">=</span> <span class="fl">0.2</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;tau_susc&#39;</span><span class="ot">=</span> <span class="fl">0.1</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;beta_m&#39;</span><span class="ot">=</span> <span class="fl">1.0</span>)</span></code></pre></div>
+<p>Finally, enter some other important settings. Details on these settings can be found in the help for <code>data(sim.param.aux)</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pars.aux <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&#39;n&#39;</span> <span class="ot">=</span> <span class="dv">100</span>,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;seed&#39;</span> <span class="ot">=</span> <span class="dv">2468</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;n_base&#39;</span> <span class="ot">=</span> <span class="dv">7667</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;n_seq&#39;</span> <span class="ot">=</span> <span class="dv">5</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;t_max&#39;</span> <span class="ot">=</span> <span class="dv">100</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;unassigned_time&#39;</span> <span class="ot">=</span>  <span class="fl">9e+6</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;sample_range&#39;</span> <span class="ot">=</span> <span class="dv">10</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;partial_seq_out&#39;</span> <span class="ot">=</span> <span class="dv">0</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;n_base_part&#39;</span> <span class="ot">=</span> <span class="dv">1000</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;n_index&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;coord_type&#39;</span> <span class="ot">=</span> <span class="st">&#39;longlat&#39;</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;kernel_type&#39;</span> <span class="ot">=</span> <span class="st">&#39;power_law&#39;</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;latent_type&#39;</span> <span class="ot">=</span> <span class="st">&#39;gamma&#39;</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;opt_k80&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;opt_betaij&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;opt_mov&#39;</span> <span class="ot">=</span> <span class="dv">0</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;n_mov&#39;</span> <span class="ot">=</span> <span class="dv">60</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>                       <span class="at">stringsAsFactors =</span> F)</span></code></pre></div>
+<div style="page-break-after: always;"></div>
+</div>
+<div id="simulate-an-outbreak-with-corresponding-genomic-data" class="section level3">
+<h3>Simulate an outbreak with corresponding genomic data</h3>
+<p>Then you are ready to run the simulation as follows:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sim.out<span class="ot">&lt;-</span><span class="fu">sim</span>(<span class="at">epi.inputs =</span> sim.epi.input, </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">moves.inputs =</span> sim.moves.input, </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">parsKey =</span> para.key,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">parsAux =</span> pars.aux, </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">inputPath =</span> <span class="st">&quot;./inputs&quot;</span>, </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">outputPath =</span> <span class="st">&quot;./outputs&quot;</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Input path: ./inputs/ </span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Output path: ./outputs/ </span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Outbreak simulated successfully.</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span></code></pre></div>
+<p>This function:</p>
+<ol style="list-style-type: decimal">
+<li>Creates input and output directories at the locations specified, or deletes everything existing in those directories.</li>
+<li>Checks the ranges of key inputs to see that they are within reasonable limits.</li>
+<li>Writes a set of intput files to the <code>inputPath</code>.</li>
+<li>Runs the simulation storing key outputs into an object <code>sim.out</code> and also writing output files to the <code>outputPath</code>.</li>
+</ol>
+</div>
+<div id="inspecting-some-of-these-outputs" class="section level3">
+<h3>Inspecting some of these outputs</h3>
+<p>The epidemiological dataset with simulated values for timing of exposure, onset and end of the infectious period for each individual.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sim.out<span class="sc">$</span>epi.sim[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>,]</span></code></pre></div>
+<pre><code>#&gt;      k  coor_x   coor_y     t_e     t_i     t_r ftype0 ftype1 ftype2 herdn
+#&gt; [1,] 0 144.901 -36.4348  0.0000  2.6178 29.2340      0      1      0  3209
+#&gt; [2,] 1 144.924 -36.4288  3.0335 20.3937 47.2527      0      0      1  1705
+#&gt; [3,] 2 144.924 -36.4288 10.0918 21.3314 27.9330      1      0      0   133
+#&gt; [4,] 3 144.903 -36.4205  2.7276  8.2868 28.4940      1      0      0   213
+#&gt; [5,] 4 144.907 -36.4179  2.7923  7.7827 27.3594      1      0      0   127
+#&gt; [6,] 5 144.898 -36.4310  2.6424 18.2998 42.5514      0      0      1     6</code></pre>
+<p>The unique ordered identifier (i.e. k) of the simulated infected source of each individual. Those with a simulated source = 9999 have been infected from an external source.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sim.out<span class="sc">$</span>infected_source, <span class="dv">14</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] 9999    0    0    0    0    0    0   26    0    0    0   12    0   57</span></span></code></pre></div>
+<p>Any with a simulated source = -99 have not been infected in this simulation.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(sim.out<span class="sc">$</span>infected_source <span class="sc">==</span> <span class="sc">-</span><span class="dv">99</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 15 52 61</span></span></code></pre></div>
+<div style="page-break-after: always;"></div>
+<p>The percentage of individuals in the population that were infected can be calculated as:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>inf <span class="ot">&lt;-</span> <span class="fu">which</span>(sim.out<span class="sc">$</span>infected_source <span class="sc">!=</span> <span class="sc">-</span><span class="dv">99</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(inf)<span class="sc">/</span><span class="fu">length</span>(sim.out<span class="sc">$</span>infected_source)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.97</span></span></code></pre></div>
+<p>The percentage of <em>total</em> individuals that were simulated to have actually been sampled is returned as:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sim.out<span class="sc">$</span>sampled_perct</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span></code></pre></div>
+<p>The simulated timing of sampling per individual. Those with the <code>unassigned_time</code> of 9e6 have not been sampled.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">floor</span>(sim.out<span class="sc">$</span>t_sample), <span class="dv">20</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1]       6      12      17       9       9      11       6      13       8</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [10]      12       9      15      12      44 9000000      65      22      14</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [19]      14      28</span></span></code></pre></div>
+<p>The percentage of <em>infected</em> individuals that were simulated to have actually been sampled can be calculated as follows:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">which</span>(sim.out<span class="sc">$</span>t_sample[inf] <span class="sc">!=</span> <span class="fl">9e6</span>))<span class="sc">/</span><span class="fu">length</span>(inf)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span></code></pre></div>
+<div style="page-break-after: always;"></div>
+<p>The sequence data itself can be found in the files <code>subject_x_nt.txt</code> with the <code>x</code> repesenting the identified (<code>k</code>) for each individual. The nucleotides bases are represented as 1=A, 2=G, 3=T, 4=C. If an individual has a sequence simulated at more than one time-point (i.e. when it was exposed, then subsequently at the time when it infected another individual(s), and the possibly again if sampled) then each simulated sequence is written to a new line, comma-separated. The times corresponding to these sequences are stored in the files <code>subject_x_t_nt.txt</code>.</p>
+<p>To write a simulated set of sequences for an individual out to FASTA using the <code>ape</code> library:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ape)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#read in the sequences from individual k=0</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> <span class="fu">paste0</span>(sim.out<span class="sc">$</span>outputPath, <span class="st">&quot;subject_0_nt.txt&quot;</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>seqs1 <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">read.csv</span>(fn, <span class="at">header=</span>F))</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#the sequences for this individul are stored in 19 rows</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># nucleotides are coded as 1=A, 2=G, 3=T, 4=C</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(seqs1)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]   24 7667</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#convert the sequences to their nucleotide base letters</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>seqs1[seqs1<span class="sc">==</span><span class="dv">1</span>]<span class="ot">&lt;-</span><span class="st">&quot;a&quot;</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>seqs1[seqs1<span class="sc">==</span><span class="dv">2</span>]<span class="ot">&lt;-</span><span class="st">&quot;g&quot;</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>seqs1[seqs1<span class="sc">==</span><span class="dv">3</span>]<span class="ot">&lt;-</span><span class="st">&quot;t&quot;</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>seqs1[seqs1<span class="sc">==</span><span class="dv">4</span>]<span class="ot">&lt;-</span><span class="st">&quot;c&quot;</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">#name the rows, which become the tip labels in the fasta file.</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#for this we will import the timings associated with each sequence</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> <span class="fu">paste0</span>(sim.out<span class="sc">$</span>outputPath, <span class="st">&quot;subject_0_t_nt.txt&quot;</span>)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>seqs1_t <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">unlist</span>(<span class="fu">read.table</span>(fn)))</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(seqs1) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;k0_&quot;</span>, <span class="fu">round</span>(seqs1_t,<span class="dv">3</span>))</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="co">#write these out to a fasta file</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ape)</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="fu">write.dna</span>(seqs1, <span class="at">file=</span><span class="st">&#39;seqs1.fasta&#39;</span>, <span class="at">format =</span> <span class="st">&#39;fasta&#39;</span>, <span class="at">nbcol =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="co">#inspect snps in these data</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>seq.tab <span class="ot">&lt;-</span> <span class="fu">apply</span>(seqs1, <span class="at">MARGIN =</span> <span class="dv">2</span>, table)</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>snp.v<span class="ot">&lt;-</span><span class="fu">sapply</span>(seq.tab, length)</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>snps<span class="ot">&lt;-</span><span class="fu">as.numeric</span>(<span class="fu">which</span>(snp.v<span class="sc">&gt;</span><span class="dv">1</span>))</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>seqs1[<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>,snps]</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          V349 V839 V1626 V4325 V4630</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; k0_0     &quot;a&quot;  &quot;g&quot;  &quot;t&quot;   &quot;g&quot;   &quot;g&quot;  </span></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; k0_2.642 &quot;a&quot;  &quot;a&quot;  &quot;t&quot;   &quot;g&quot;   &quot;g&quot;  </span></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; k0_2.728 &quot;a&quot;  &quot;a&quot;  &quot;t&quot;   &quot;g&quot;   &quot;g&quot;  </span></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; k0_2.792 &quot;a&quot;  &quot;a&quot;  &quot;t&quot;   &quot;g&quot;   &quot;g&quot;  </span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; k0_3.034 &quot;a&quot;  &quot;a&quot;  &quot;t&quot;   &quot;g&quot;   &quot;g&quot;  </span></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; k0_3.067 &quot;a&quot;  &quot;a&quot;  &quot;t&quot;   &quot;g&quot;   &quot;g&quot;  </span></span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; k0_3.986 &quot;a&quot;  &quot;a&quot;  &quot;t&quot;   &quot;g&quot;   &quot;g&quot;  </span></span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; k0_4.07  &quot;a&quot;  &quot;a&quot;  &quot;t&quot;   &quot;g&quot;   &quot;g&quot;</span></span></code></pre></div>
+<p>There are two similar point mutations from A -&gt; G at roughly the same time in different locations in the genome.</p>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div id="outbreak-reconstruction-and-inference-with-boris" class="section level2">
+<h2>Outbreak reconstruction and inference with BORIS</h2>
+<p>In this example, we will:</p>
+<ol style="list-style-type: decimal">
+<li>Prepare the inputs for outbreak reconstruction</li>
+<li>Run the reconstruction and inference</li>
+<li>Inspect diagnostics for the MCMC chain</li>
+<li>Produce some relevant outputs</li>
+</ol>
+<div id="preparing-inputs-for-borisinfer" class="section level3">
+<h3>Preparing inputs for BORIS::infer()</h3>
+<p>The following inputs are required to run an outbreak reconstruction and inference:</p>
+<ol style="list-style-type: decimal">
+<li><code>covariates</code>: A data.frame including farm covariate data inputed as specified in the help for <code>data(infer.epi.input)</code>.</li>
+<li><code>movements</code>: A data.frame including animal movement or contact-tracing data inputed as specified in the help for <code>data(infer.moves.input)</code>.</li>
+<li><code>parsAux</code>: A data.frame including the parameters for MCMC implementation.</li>
+<li><code>keyInits</code>: A data.frame including key initial values for parameters. 1. <code>priors</code>: A data.frame including prior settings for paramters.</li>
+<li><code>scalingFactors</code>: A data.frame including scaling factors for parameters.</li>
+<li><code>seed</code>: An integer seed for for the random number generator.</li>
+<li><code>accTable</code>: A data.frame including known sources for each individual for simulated. If unknown then enter <code>9999</code> for each source.</li>
+<li><code>genomic data</code>: A .fasta file stored on the <code>dnaPath</code>.</li>
+<li><code>t_sampling</code>: A data.frame of the times that the specimens were collected that were sequenced to provide the genomic data.</li>
+</ol>
+<p>In the following example, we will wrangle the data from the previous simulation into the required format, to show the process. The code can also be adapted to empirical inputs from an observed outbreak. Or run from the stored example input data pointed to in the help, i.e. <code>data(infer.epi.input)</code>.</p>
+<p>Typically, when working with empirical data, the onset of infectiousness and timing of exposure are unobserved and initial values have to be estimated by backwards calculation from the day clinical signs are first observed on a farm. This can be done stochastically, using Gamma distributions to represent the incubation period from exposure (t_e) to onset day, and once exposure date is estimated, the latent period from exposure (t_e) to commencement of infectiousness (t_i).</p>
+<p>Here, as we’re working with simulated data, we will assume that exposure has occurred 24 hours before the onset of infectiousness for all infected farms.</p>
+<div style="page-break-after: always;"></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BORIS)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#use the epidemiological data from the previous simulation run</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>epi.data<span class="ot">&lt;-</span><span class="fu">as.data.frame</span>(sim.out<span class="sc">$</span>epi.sim)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#make sure indexing is correct</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>epi.data<span class="sc">$</span>k<span class="ot">&lt;-</span><span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(epi.data)<span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#produce the required initial values for the temporal fields.</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#assume that exposure has occurred 24 hours before the onset of infectiousness:</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>epi.data<span class="sc">$</span>t_e <span class="ot">&lt;-</span> epi.data<span class="sc">$</span>t_i <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>epi.data<span class="sc">$</span>t_r <span class="ot">&lt;-</span> <span class="fu">round</span>(epi.data<span class="sc">$</span>t_r, <span class="dv">0</span>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#wrangle the farm type variables into the required format</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>epi.data<span class="sc">$</span>ftype <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>epi.data<span class="sc">$</span>ftype[epi.data<span class="sc">$</span>ftype0 <span class="sc">==</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>epi.data<span class="sc">$</span>ftype[epi.data<span class="sc">$</span>ftype1 <span class="sc">==</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>epi.data<span class="sc">$</span>ftype[epi.data<span class="sc">$</span>ftype2 <span class="sc">==</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co">#keep just the desired columns, re-ordered as required</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>epi.data<span class="ot">&lt;-</span>epi.data[,<span class="fu">c</span>(<span class="st">&#39;k&#39;</span>,<span class="st">&#39;coor_x&#39;</span>,<span class="st">&#39;coor_y&#39;</span>,<span class="st">&#39;t_e&#39;</span>,<span class="st">&#39;t_i&#39;</span>,<span class="st">&#39;t_r&#39;</span>,<span class="st">&#39;ftype&#39;</span>,<span class="st">&#39;herdn&#39;</span>)]</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(epi.data)</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   k  coor_x   coor_y       t_e       t_i t_r ftype herdn</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0 144.901 -36.4348  1.617810  2.617810  29     1  3209</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 1 144.924 -36.4288 19.393685 20.393685  47     2  1705</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 2 144.924 -36.4288 20.331428 21.331428  28     0   133</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 3 144.903 -36.4205  7.286752  8.286752  28     0   213</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 4 144.907 -36.4179  6.782686  7.782686  27     0   127</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 5 144.898 -36.4310 17.299802 18.299802  43     2     6</span></span></code></pre></div>
+<div style="page-break-after: always;"></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#for each individual propose an initial source for the tree used to initialised the MCMC inference</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#this could be assigned manually based on available information and/or opinion. Or, as in the below example randomly sampled from those individuals with earlier onset times than each individual.</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>epi.data<span class="sc">$</span>initial_source<span class="ot">&lt;-</span><span class="cn">NA</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(epi.data)){</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  epi.data<span class="sc">$</span>k[i]</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="co">#identify the pool of possible sources with earlier initial exposure times</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  pool_source<span class="ot">&lt;-</span> epi.data<span class="sc">$</span>k [<span class="fu">which</span>(epi.data<span class="sc">$</span>t_e<span class="sc">&lt;</span>epi.data<span class="sc">$</span>t_e[i] <span class="sc">&amp;</span> epi.data<span class="sc">$</span>t_r<span class="sc">&gt;</span>epi.data<span class="sc">$</span>t_e[i])]</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">#randomly assign an infection source is there are any in the pool</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(pool_source)<span class="sc">&gt;</span><span class="dv">1</span>) epi.data<span class="sc">$</span>initial_source[i] <span class="ot">&lt;-</span> <span class="fu">sample</span>(pool_source,<span class="dv">1</span>) </span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(pool_source)<span class="sc">==</span><span class="dv">1</span>) epi.data<span class="sc">$</span>initial_source[i] <span class="ot">&lt;-</span> pool_source[<span class="dv">1</span>] </span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">#otherwise assign 9999 as the initial source, to indicate that it is either external to the dataset or unknown</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(pool_source)<span class="sc">&lt;</span><span class="dv">1</span>) epi.data<span class="sc">$</span>initial_source[i] <span class="ot">&lt;-</span> <span class="dv">9999</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>epi.data<span class="sc">$</span>initial_source</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [1] 9999   77   95   77   28   28    4    3   90    7   20    9   22   66   15</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [16]   99   17    9    8    7   45   80    3   26   19   43    4   72    0   72</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [31]   49   89   76   91   22   56   34    0   37   43   90   97   11   70    0</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [46]   28    5   69   97   80   90   15    7   46   92   48   77   80   35   90</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [61]   15   40   94   11   58    9   86   24   16   44    7   29   18   92   69</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [76]   23   52    0   69   64   28   17   34   28   22   80    3   34   25   56</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [91]   12   70   39   49    6   77    6   26   37   33</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="co">#use the movement data from previously</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>moves.inputs<span class="ot">&lt;-</span>sim.out<span class="sc">$</span>moves.inputs</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(moves.inputs)</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   from_k to_k t_m</span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      0    1   9</span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      0    2   9</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      0    3   9</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4      0    4   9</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5      0    5   9</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6      0    6   9</span></span></code></pre></div>
+<div style="page-break-after: always;"></div>
+<p>The options for configuring the MCMC implementation are setup as follows. For details see the help for <code>data(infer.param.aux)</code>.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>pars.aux <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&#39;n&#39;</span> <span class="ot">=</span> <span class="fu">nrow</span>(epi.data),</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;kernel_type&#39;</span> <span class="ot">=</span> <span class="st">&#39;power_law&#39;</span>,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;coord_type&#39;</span> <span class="ot">=</span> <span class="st">&#39;longlat&#39;</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;t_max&#39;</span> <span class="ot">=</span> <span class="dv">100</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;unassigned_time&#39;</span> <span class="ot">=</span>  <span class="fl">9e+6</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;processes&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;n_seq&#39;</span> <span class="ot">=</span> <span class="dv">5</span>,                       </span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;n_base&#39;</span> <span class="ot">=</span> <span class="dv">7667</span>,                       </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;n_iterations&#39;</span> <span class="ot">=</span> <span class="fl">1e5</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;n_frequ&#39;</span> <span class="ot">=</span> <span class="dv">10</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;n_output_source&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;n_output_gm&#39;</span> <span class="ot">=</span> <span class="dv">1000</span>,</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;n_cout&#39;</span> <span class="ot">=</span> <span class="dv">10</span>,</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;opt_latgamma&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;opt_k80&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;opt_betaij&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;opt_ti_update&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;opt_mov&#39;</span> <span class="ot">=</span> <span class="dv">0</span>,</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>                       <span class="at">stringsAsFactors =</span> F)</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="co">#once `t_max` is set, right censor all recovery times </span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>epi.data<span class="sc">$</span>t_r[epi.data<span class="sc">$</span>t_r<span class="sc">&gt;</span>pars.aux<span class="sc">$</span>t_max]<span class="ot">&lt;-</span>pars.aux<span class="sc">$</span>t_max</span></code></pre></div>
+<p>The initial values for key inferred parameters are setup as follows. For details see the help for <code>data(infer.param.key)</code>.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>para.key.inits <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&#39;alpha&#39;</span> <span class="ot">=</span> <span class="fl">2e-4</span>,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&#39;beta&#39;</span> <span class="ot">=</span> <span class="fl">0.1</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&#39;lat_mu&#39;</span> <span class="ot">=</span> <span class="dv">5</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&#39;lat_var&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&#39;c&#39;</span> <span class="ot">=</span> <span class="dv">10</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&#39;d&#39;</span> <span class="ot">=</span> <span class="dv">3</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&#39;k_1&#39;</span> <span class="ot">=</span> <span class="dv">3</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&#39;mu_1&#39;</span> <span class="ot">=</span> <span class="fl">3e-05</span>,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&#39;mu_2&#39;</span> <span class="ot">=</span> <span class="fl">1e-06</span>,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&#39;p_ber&#39;</span> <span class="ot">=</span> <span class="fl">0.2</span>,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&#39;phi_inf1&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&#39;phi_inf2&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&#39;rho_susc1&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&#39;rho_susc2&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&#39;nu_inf&#39;</span> <span class="ot">=</span> <span class="fl">0.2</span>,</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&#39;tau_susc&#39;</span><span class="ot">=</span> <span class="fl">0.1</span>,</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&#39;beta_m&#39;</span><span class="ot">=</span> <span class="fl">0.5</span>)</span></code></pre></div>
+<div style="page-break-after: always;"></div>
+<p>The prior information for inferred parameters are setup as follows. For details see the help for <code>data(infer.param.priors)</code>.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>para.priors <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&#39;t_range&#39;</span> <span class="ot">=</span> <span class="dv">7</span>,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;t_back&#39;</span> <span class="ot">=</span> <span class="dv">21</span>,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;t_bound_hi&#39;</span> <span class="ot">=</span> <span class="dv">10</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;rate_exp_prior&#39;</span> <span class="ot">=</span> <span class="fl">0.001</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;ind_n_base_part&#39;</span> <span class="ot">=</span> <span class="dv">0</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;n_base_part&#39;</span> <span class="ot">=</span> <span class="dv">1000</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;alpha_hi&#39;</span> <span class="ot">=</span> <span class="fl">0.1</span>,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;beta_hi&#39;</span> <span class="ot">=</span> <span class="dv">50</span>,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;mu_lat_hi&#39;</span> <span class="ot">=</span> <span class="dv">50</span>,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;var_lat_lo&#39;</span> <span class="ot">=</span> <span class="fl">0.1</span>,</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;var_lat_hi&#39;</span> <span class="ot">=</span> <span class="dv">50</span>,</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;c_hi&#39;</span> <span class="ot">=</span> <span class="dv">100</span>,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;d_hi&#39;</span> <span class="ot">=</span> <span class="dv">100</span>,</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;k_1_lo&#39;</span> <span class="ot">=</span> <span class="dv">0</span>,</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;k_1_hi&#39;</span> <span class="ot">=</span> <span class="dv">100</span>,                          </span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;mu_1_hi&#39;</span> <span class="ot">=</span> <span class="fl">0.1</span>,</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;mu_2_hi&#39;</span> <span class="ot">=</span> <span class="fl">0.1</span>,</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;p_ber_hi&#39;</span> <span class="ot">=</span> <span class="fl">1.0</span>,</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;phi_inf1_hi&#39;</span> <span class="ot">=</span> <span class="dv">500</span>,</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;phi_inf2_hi&#39;</span> <span class="ot">=</span> <span class="dv">500</span>,</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;rho_susc1_hi&#39;</span> <span class="ot">=</span> <span class="dv">500</span>,</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;rho_susc2_hi&#39;</span> <span class="ot">=</span> <span class="dv">500</span>,</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;nu_inf_lo&#39;</span> <span class="ot">=</span> <span class="dv">0</span>,</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;nu_inf_hi&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;tau_susc_lo&#39;</span> <span class="ot">=</span> <span class="dv">0</span>,</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;tau_susc_hi&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;beta_m_hi&#39;</span> <span class="ot">=</span> <span class="dv">5</span>,</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&#39;trace_window&#39;</span> <span class="ot">=</span> <span class="dv">20</span>)  </span></code></pre></div>
+<div style="page-break-after: always;"></div>
+<p>The scaling factors (otherwise know as operators or proposal distances) for inferred parameters are setup as follows. For details see the help for <code>data(infer.param.sf)</code>. The default is 1. Increase the scaling factor to increase the proposal distance, for instance if the parameter is wandering about and accepting too often (i.e. if the proposal distance is too low). Decrease the scaling factor to decrease the proposal distance, for instance if the parameter is not being accepted often enough (i.e. if the proposal distance is too high and its trace looks like a ‘Manhattan skyline’). Set the scaling factor to zero to fix a parameter at its initialising value (so that it doesn’t update, such as for <code>beta_m</code> when <code>opt_mov = 0</code>).</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>para.sf <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&#39;alpha_sf&#39;</span> <span class="ot">=</span> <span class="fl">0.001</span>,</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;beta_sf&#39;</span> <span class="ot">=</span> <span class="fl">0.5</span>,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;mu_lat_sf&#39;</span>   <span class="ot">=</span> <span class="fl">1.25</span>, </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;var_lat_sf&#39;</span> <span class="ot">=</span> <span class="fl">1.75</span>,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;c_sf&#39;</span> <span class="ot">=</span> <span class="fl">1.25</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;d_sf&#39;</span> <span class="ot">=</span> <span class="fl">0.75</span>,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;k_1_sf&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;mu_1_sf&#39;</span> <span class="ot">=</span> <span class="fl">2.5e-5</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;mu_2_sf&#39;</span> <span class="ot">=</span> <span class="fl">2.5e-6</span>,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;p_ber_sf&#39;</span> <span class="ot">=</span> <span class="fl">0.02</span>,</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;phi_inf1_sf&#39;</span> <span class="ot">=</span> <span class="fl">1.75</span>,</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;phi_inf2_sf&#39;</span> <span class="ot">=</span> <span class="fl">1.5</span>,</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;rho_susc1_sf&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;rho_susc2_sf&#39;</span> <span class="ot">=</span> <span class="fl">1.25</span>,</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;nu_inf_sf&#39;</span> <span class="ot">=</span> <span class="fl">0.25</span>,</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;tau_susc_sf&#39;</span> <span class="ot">=</span> <span class="fl">0.25</span>,</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;beta_m_sf&#39;</span> <span class="ot">=</span> <span class="dv">1</span>)</span></code></pre></div>
+<div style="page-break-after: always;"></div>
+</div>
+<div id="preparing-the-genomic-data-for-borisinfer" class="section level3">
+<h3>Preparing the genomic data for BORIS::infer()</h3>
+<p>Genomic data can simply be written to the <code>dnaPath</code> as a .fasta file prepared with the <code>ape</code> library or other phylogenetic software.</p>
+<p>Here, we use the simulated outbreak data to show how to utilise the genomes produced earlier.</p>
+<p>First, use the sampling times data from the simulation. Those not sampled have the unassigned value.</p>
+<p>Then identify and store the data from sequences at the time of sampling on each sampled farm. Other sequences are from the times when transmission events occurred and are typically unobserved.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>t_sample <span class="ot">&lt;-</span> sim.out<span class="sc">$</span>t_sample</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#which individuals are missing genomes and which were sampled</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>no.genome <span class="ot">&lt;-</span> <span class="fu">which</span>(t_sample <span class="sc">==</span> pars.aux<span class="sc">$</span>unassigned_time)  </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>genome.sampled <span class="ot">&lt;-</span> <span class="fu">which</span>(t_sample <span class="sc">!=</span> pars.aux<span class="sc">$</span>unassigned_time)  </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co">#the sampling times of those with genomes</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(t_sample[<span class="sc">-</span>no.genome], <span class="dv">3</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1]  6.468 12.505 17.956  9.763  9.038 11.291  6.884 13.351  8.482 12.236</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [11]  9.538 15.338 12.471 44.304 65.340 22.094 14.022 14.879 28.882 15.556</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [21] 31.617 15.862 22.231 35.626 28.803 11.185 11.666  9.220 26.583 41.352</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [31] 37.501 30.662 28.404 23.505 33.760 22.470 30.270 32.088 38.565 26.608</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [41] 37.169 21.097 23.626 22.557 11.358 42.737 58.215 23.479 26.968 15.029</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [51] 19.289 55.037 55.787 34.940 28.163 24.532 38.963 31.572 28.251 26.192</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [61] 40.614 45.238 11.483 36.738 58.713 37.289 39.037 10.749 28.551 21.707</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [71] 58.135 42.220 44.215 13.127  5.950 42.471 59.961 17.831 26.687 29.641</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [81] 23.199 34.880 27.736 15.001 26.158 33.933 29.640 15.139 19.792 54.242</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [91] 51.176 19.304 15.397 13.428 20.759 36.208 64.398</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="co">#setup a matrix to hold 1 sequence per individual or missing data</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>seq_mat<span class="ot">&lt;-</span><span class="fu">matrix</span>(<span class="at">nrow=</span><span class="fu">nrow</span>(epi.data), <span class="at">ncol=</span>pars.aux<span class="sc">$</span>n_base)</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a><span class="co">#identify and store the data from sequences at the time of sampling </span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a><span class="co">#the next step takes approximately 30 seconds to run</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(epi.data)){</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>  k <span class="ot">&lt;-</span> i<span class="dv">-1</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(i <span class="sc">%in%</span> no.genome){</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">#these are not used, given t.sample for these = the unassigned time</span></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">#n denotes any base (in the IUPAC system)</span></span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>    seq_mat[i,]<span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="st">&quot;n&quot;</span>, pars.aux<span class="sc">$</span>n_base)</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>    <span class="co">#identify the closest corresponding sample to the time of </span></span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>    <span class="co">#sampling for each sampled individual</span></span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>    fn<span class="ot">&lt;-</span><span class="fu">paste0</span>(sim.out<span class="sc">$</span>outputPath,<span class="st">&quot;subject_&quot;</span>,k,<span class="st">&quot;_t_nt.txt&quot;</span>)</span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>    ts<span class="ot">&lt;-</span><span class="fu">as.numeric</span>(<span class="fu">unlist</span>(<span class="fu">read.csv</span>(fn, <span class="at">header=</span>F)))</span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>    tsamp <span class="ot">&lt;-</span> <span class="fu">which.min</span>(<span class="fu">abs</span>(ts <span class="sc">-</span> t_sample[i]))</span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>    <span class="co">#read in the corresponding nucleotide sequence</span></span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>    fn<span class="ot">&lt;-</span><span class="fu">paste0</span>(sim.out<span class="sc">$</span>outputPath,<span class="st">&quot;subject_&quot;</span>,k,<span class="st">&quot;_nt.txt&quot;</span>)</span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>    nts<span class="ot">&lt;-</span><span class="fu">read.csv</span>(fn, <span class="at">header =</span> F, <span class="at">stringsAsFactors =</span> F)</span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>    <span class="co">#store the closest corresponding sample for this individual</span></span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>    seq_mat[i,]<span class="ot">&lt;-</span><span class="fu">as.numeric</span>(nts[tsamp,])</span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>((i<span class="sc">%%</span><span class="dv">2</span>) <span class="sc">==</span> <span class="dv">0</span>) {<span class="fu">cat</span>(<span class="st">&quot;.&quot;</span>,<span class="at">sep=</span><span class="st">&quot;&quot;</span>); <span class="fu">flush.console</span>()}  <span class="co">#</span></span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a>} </span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ..................................................</span></span></code></pre></div>
+<p>Finalise the sequence data and write it to a *.fasta file.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#convert the sequence data to their nucleotide base letters</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>seq_mat[seq_mat<span class="sc">==</span><span class="dv">1</span>]<span class="ot">&lt;-</span><span class="st">&quot;a&quot;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>seq_mat[seq_mat<span class="sc">==</span><span class="dv">2</span>]<span class="ot">&lt;-</span><span class="st">&quot;g&quot;</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>seq_mat[seq_mat<span class="sc">==</span><span class="dv">3</span>]<span class="ot">&lt;-</span><span class="st">&quot;t&quot;</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>seq_mat[seq_mat<span class="sc">==</span><span class="dv">4</span>]<span class="ot">&lt;-</span><span class="st">&quot;c&quot;</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">#write row.names to the sequence matrix object, including the &#39;k&#39; </span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co">#and time of sampling. These will be used as tip labels</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="fu">row.names</span>(seq_mat)<span class="ot">&lt;-</span> <span class="fu">paste0</span>(epi.data<span class="sc">$</span>k, <span class="st">&quot;_&quot;</span>, <span class="fu">round</span>(sim.out<span class="sc">$</span>t_sample,<span class="dv">0</span>))</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">dir.exists</span>(<span class="st">&quot;gen_inputs&quot;</span>)) {</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">dir.create</span>(<span class="st">&quot;gen_inputs&quot;</span>)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    } </span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="co">#write these out to a fasta file in the dnaPath directory</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ape)</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="fu">write.dna</span>(seq_mat, <span class="at">file=</span><span class="st">&#39;./gen_inputs/seqs.fasta&#39;</span>, <span class="at">format =</span> <span class="st">&#39;fasta&#39;</span>, <span class="at">nbcol =</span> <span class="sc">-</span><span class="dv">1</span>)</span></code></pre></div>
+<div style="page-break-after: always;"></div>
+</div>
+<div id="running-the-reconstruction-and-inference" class="section level3">
+<h3>Running the reconstruction and inference</h3>
+<p>Here we just run one MCMC chain for a very small number of iterations (for demonstration purposes only), whereas in practice multiple chains must be run and inspected appropriately (i.e. for burn-in, convergence and serial autocorrelation) before any inferences are made on the transmission tree or any inferred parameters.</p>
+<p>As the accuracy table (accTable) for evaluating how well the infer is performing, we will use the known infected sources from our prior simulation that generated these data. When inferring for an actual outbreak, it will be unknown which is the true source for each infected individual. In that case, enter <code>9999</code> for all infected sources.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>pars.aux<span class="sc">$</span>n_iterations <span class="ot">=</span> <span class="dv">1000</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>infer.out<span class="ot">&lt;-</span><span class="fu">infer</span>(<span class="at">covariates =</span> epi.data,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">moves.inputs =</span> moves.inputs,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">parsAux =</span> pars.aux, </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">keyInits =</span> para.key.inits,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">priors =</span> para.priors, </span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">scalingFactors =</span> para.sf, </span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">seed =</span> <span class="dv">1</span>,</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">accTable =</span> sim.out<span class="sc">$</span>infected_source,</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">t.sample =</span> sim.out<span class="sc">$</span>t_sample,</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">inputPath =</span> <span class="st">&quot;./inputs&quot;</span>, </span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>                 <span class="at">outputPath =</span> <span class="st">&quot;./outputs&quot;</span>, </span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>                 <span class="at">dnaPath =</span> <span class="st">&quot;./gen_inputs&quot;</span>)</span></code></pre></div>
+<p>Multiple chains can be run:</p>
+<ol style="list-style-type: decimal">
+<li>on a single computer: by saving the output from the first run to a new directory, because when <code>infer()</code> starts it deletes everything in the input and output directories. Then running again with a different seed.</li>
+<li>on a SLURM cluster or similar: adapt the following code, then use <code>.seed</code> as the <code>seed</code> argument for the function <code>infer()</code>:</li>
+</ol>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>task.id <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">Sys.getenv</span>(<span class="st">&#39;SLURM_ARRAY_TASK_ID&#39;</span>))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>task.id</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>.seed <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">102</span>, <span class="dv">1003</span>, <span class="dv">10004</span>)[task.id]</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>.seed</span></code></pre></div>
+<div style="page-break-after: always;"></div>
+</div>
+<div id="diagnostics-and-outputs-from-multiple-mcmc-chains" class="section level3">
+<h3>Diagnostics and outputs from multiple MCMC chains</h3>
+<p>Following the MCMC run, it is important to check and exclude burn-in appropriately, and for appropriate mixing and convergence of multiple chains. <code>Tracer</code> (<a href="http://beast.community/tracer" class="uri">http://beast.community/tracer</a>) is a great tool for rapidly evaluating the parameter output of chains, as stored in the file <code>parameters_current.log</code>. It allows rapid assessment of convergence of each parameter across multiple chains, effective sample sizes, amount of autocorrelation, and also reading off summary posterior estimates.</p>
+<p>Here we will implement some similar analyses in <code>R</code>, then continue with code for extracting posterior estimates of the transmission tree and further inferred parameters for each individual.</p>
+<p>In the last example, we just ran a single chain. The following uses example data from 2 chains of the same inference, each of length 10,000 MCMC cycles. Again, this is for illustative purposes only, in practice hundreds of thousands to millions of iterations are typically required as these are complex inferences.</p>
+<div id="inspecting-the-chains" class="section level4">
+<h4>Inspecting the chains</h4>
+<p>Inspect the start of the chains to evaluate if and when convergence has occurred. Therefore, where to set burn-in, and if need be the amount of thinning.</p>
+<p>Pre-prepared parameter data for each chain have been inputted by reading in the tab delimited <code>parameters_current.log</code> files produced by independantly seeded <code>infer()</code> runs on the same input data.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BORIS)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(paras1)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(paras2)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>burnin<span class="ot">=</span><span class="dv">0</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>thin <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>end<span class="ot">=</span><span class="fl">1e04</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>x<span class="ot">&lt;-</span><span class="fu">seq</span>(burnin<span class="sc">+</span><span class="dv">1</span>,end,thin)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="co"># par(mfrow=c(2,2))</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(x, paras1$alpha[x], type=&#39;l&#39;, col=&#39;#ff000060&#39;, </span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="co">#      ylim=c(0,0.01), </span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="co">#      xlab=&#39;iteration&#39;, ylab=expression(alpha), cex.lab=1.4)</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="co"># lines(x, paras2$alpha[x], col=&#39;#0000ff60&#39;)</span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(x, paras1$beta[x], type=&#39;l&#39;, col=&#39;#ff000060&#39;,</span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="co">#      xlab=&#39;iteration&#39;, ylab=expression(beta),</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="co">#      cex.lab=1.4)</span></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="co"># lines(x, paras2$beta[x], col=&#39;#0000ff60&#39;)</span></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(x, paras1$mu_1[x], type=&#39;l&#39;, col=&#39;#ff000060&#39;,</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="co">#      xlab=&#39;iteration&#39;, ylab=expression(mu[1]),</span></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="co">#      cex.lab=1.4)</span></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="co"># lines(x, paras2$mu_1[x], col=&#39;#0000ff60&#39;)</span></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(x, paras1$p_ber[x], type=&#39;l&#39;, col=&#39;#ff000060&#39;,</span></span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a><span class="co">#      xlab=&#39;iteration&#39;, ylab=expression(p[ber]),</span></span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a><span class="co">#      cex.lab=1.4)</span></span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a><span class="co"># lines(x, paras2$p_ber[x], col=&#39;#0000ff60&#39;)</span></span></code></pre></div>
+<p>In this example, the two chains for <code>alpha</code> appear to converge very quickly then mix well with most posterior samples between 0 and 0.02.</p>
+<p>The chains for <code>beta</code> are looking like they are soon to converge, however there are two patterns here that indicate <strong>poor mixing</strong> to be aware of if they persist longer into traces. In the first 2000 iterations, both traces for <code>beta</code> appear to have a rate of acceptance that is too low. A typical cause of such a pattern is that the scaling factor (or proposal distance) is too large. In this case, however, this is unlikely to be the cause as this mixing pattern self-corrects. Between iterations 4000 and 10000 the traces wander about (another poor mixing pattern), and it appears the rate of acceptance is now too high. In this example, this is just because we haven’t run enough iterations, and the chains can still be considered to be burning-in. Possible solutions to such poor mixing patterns could include running the MCMC for more iterations or altering the respective scaling factor (proposal distance).</p>
+<p>The traces for <code>mu_1</code> initially converge before the 500th iteration, then there is a sizeable jump to a lower posterior estimate in one chain, followed by the other, with convergence achieved after 2000 iterations.</p>
+<p>The traces for the parameter <code>p_ber</code> also converge by around 2000 iterations.</p>
+<div style="page-break-after: always;"></div>
+<p>In this example, we will use a burn-in of 5000 iterations, and given little indication of serial autocorrelation will not thin the estimates.</p>
+<p>The posterior parameter estimates can thus be derived as follows:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>burnin<span class="ot">=</span><span class="dv">5000</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>thin <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>end<span class="ot">=</span><span class="fl">1e04</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>x<span class="ot">&lt;-</span><span class="fu">seq</span>(burnin<span class="sc">+</span><span class="dv">1</span>,end,thin)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>paras<span class="ot">&lt;-</span><span class="fu">rbind</span>(paras1[x,], paras2[x,])</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co">#posterior estimates for alpha</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">quantile</span>(paras<span class="sc">$</span>alpha, <span class="at">probs=</span><span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.025</span>, <span class="fl">0.975</span>)), <span class="dv">4</span>)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    50%   2.5%  97.5% </span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.0013 0.0002 0.0047</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="co">#posterior estimates for beta</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">quantile</span>(paras<span class="sc">$</span>beta, <span class="at">probs=</span><span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.025</span>, <span class="fl">0.975</span>)), <span class="dv">3</span>)</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   50%  2.5% 97.5% </span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.506 0.204 1.311</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="co">#posterior estimates for c</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">quantile</span>(paras<span class="sc">$</span>c, <span class="at">probs=</span><span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.025</span>, <span class="fl">0.975</span>)), <span class="dv">2</span>)</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   50%  2.5% 97.5% </span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9.69  8.54 10.87</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a><span class="co">#posterior estimates for d</span></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">quantile</span>(paras<span class="sc">$</span>d, <span class="at">probs=</span><span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.025</span>, <span class="fl">0.975</span>)), <span class="dv">3</span>)</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   50%  2.5% 97.5% </span></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2.172 1.760 2.648</span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a><span class="co">#posterior estimates for mu_1</span></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(paras<span class="sc">$</span>mu_1, <span class="at">probs=</span><span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.025</span>, <span class="fl">0.975</span>))</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         50%        2.5%       97.5% </span></span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2.12378e-05 1.77687e-05 2.50796e-05</span></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a><span class="co">#posterior estimates for mu_2</span></span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(paras<span class="sc">$</span>mu_2, <span class="at">probs=</span><span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.025</span>, <span class="fl">0.975</span>))</span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          50%         2.5%        97.5% </span></span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2.535750e-06 1.788056e-06 3.547930e-06</span></span></code></pre></div>
+<div style="page-break-after: always;"></div>
+<p>Density plots produced for each parameter of interest:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(paras1<span class="sc">$</span>alpha[x]), <span class="at">col=</span><span class="st">&#39;red&#39;</span>, <span class="at">cex.main=</span><span class="dv">2</span>, </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">main=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="fu">plain</span>(<span class="st">&quot;Density of &quot;</span>),alpha,<span class="fu">plain</span>(<span class="st">&quot;, by run&quot;</span>))))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">density</span>(paras2<span class="sc">$</span>alpha[x]), <span class="at">col=</span><span class="st">&#39;blue&#39;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div style="page-break-after: always;"></div>
+</div>
+<div id="inferred-infected-sources" class="section level4">
+<h4>Inferred infected sources</h4>
+<p>Pre-prepared infected source data for each chain have been inputted by reading in the comma separated <code>infected_source_current.csv</code> files produced by independantly seeded <code>infer()</code> runs on the same input data.</p>
+<p>Let’s inspect the <code>head</code> and <code>tail</code> of each of these datasets:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(inf1)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(inf1[,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>])</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      1 2    3 4 5 6    7 8 9 10</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 9999 6 9999 0 0 0 9999 2 9 26</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 9999 6 9999 0 0 0 9999 2 9 26</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 9999 6 9999 0 0 0 9999 2 9 26</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 9999 6 9999 0 0 0 9999 2 9 26</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 9999 6 9999 0 0 0 9999 2 9 26</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 9999 6 9999 0 0 0 9999 2 9 26</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(inf1[,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>])</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       1 2    3 4 5 6 7 8 9 10</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9995  2 2 9999 5 2 2 2 1 1  0</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9996  2 2 9999 5 2 2 2 1 0  0</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9997  2 2 9999 5 2 2 2 1 0  0</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9998  2 2 9999 5 2 2 2 1 0  0</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9999  2 2 9999 5 2 2 2 1 0  0</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10000 2 2 9999 5 2 2 2 1 0  0</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(inf2)</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(inf2[,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>])</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      1 2    3  4 5 6    7 8 9 10</span></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 9999 6 9999 95 0 2 9999 2 9 26</span></span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 9999 6 9999 95 0 2 9999 2 9 26</span></span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 9999 6 9999 95 0 2 9999 2 9 26</span></span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 9999 6 9999 95 0 2 9999 2 9 26</span></span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 9999 6 9999 95 0 2 9999 2 9 26</span></span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 9999 6 9999 95 0 2 9999 2 9 26</span></span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(inf2[,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>])</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       1 2    3  4 5 6 7 8  9 10</span></span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9995  2 2 9999 10 2 0 0 6 50 10</span></span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9996  2 2 9999 10 1 0 0 6 50 10</span></span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9997  2 2 9999 10 1 0 0 6 50  5</span></span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9998  2 2 9999 10 1 0 0 6 50  5</span></span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9999  2 2 9999 10 1 0 0 6 50  5</span></span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10000 2 2 9999 10 1 0 0 6 50  5</span></span></code></pre></div>
+<div style="page-break-after: always;"></div>
+<p>Using the same burn-in as previously decided:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>burnin<span class="ot">=</span><span class="dv">5000</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>thin <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>end<span class="ot">=</span><span class="fl">1e04</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>x<span class="ot">&lt;-</span><span class="fu">seq</span>(burnin<span class="sc">+</span><span class="dv">1</span>,end,thin)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co">#create lists that store for each individual:</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co">#- a frequence table of iterations featuring each infected source (inf.l)</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co">#- the source with the highest modal posterior support (inf.mode.l)</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co">#- the posterior support for each infected source (inf.support.l)</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>inf.l<span class="ot">&lt;-</span><span class="fu">list</span>()</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>inf.mode.l<span class="ot">&lt;-</span><span class="fu">numeric</span>()</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>inf.support.l<span class="ot">&lt;-</span><span class="fu">numeric</span>()</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(epi.data)){  </span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  inf.l[[i]]<span class="ot">&lt;-</span><span class="fu">table</span>(<span class="fu">c</span>(inf1[x,i], inf2[x,i]))</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  inf.mode.l[i]<span class="ot">&lt;-</span><span class="fu">as.numeric</span>(<span class="fu">attr</span>(<span class="fu">which.max</span>(inf.l[[i]]), <span class="st">&#39;names&#39;</span>))</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  inf.support.l[i]<span class="ot">&lt;-</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.numeric</span>(inf.l[[i]][<span class="fu">which.max</span>(inf.l[[i]])]<span class="sc">/</span><span class="fu">sum</span>(inf.l[[i]]))</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a><span class="co">#inspect these outputs for individual k=6 </span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>inf.l[[<span class="dv">2</span>]]</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0    2    5    6    8   26   45 </span></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2737 6489  611  110   32    5   16</span></span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>inf.mode.l[<span class="dv">2</span>]</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2</span></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>inf.support.l[<span class="dv">2</span>]</span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.6489</span></span></code></pre></div>
+<div style="page-break-after: always;"></div>
+<p>The highest modal posterior support can be combined into an edgelist:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>el<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">to=</span><span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(epi.data), <span class="at">from=</span>inf.mode.l)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(el)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   to from</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  1    2</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  2    2</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  3 9999</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  4    0</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  5    0</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  6    2</span></span></code></pre></div>
+<p>And compared to the inputted <code>accTable</code>:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#from the simulation</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>accTable <span class="ot">&lt;-</span> sim.out<span class="sc">$</span>infected_source</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co">#which are correctly inferred</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>acc <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(accTable <span class="sc">==</span> el<span class="sc">$</span>from, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>acc</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [1] 0 0 0 1 1 0 1 0 1 1 1 0 0 0 0 1 0 0 0 1 0 0 0 1 0 0 1 0 1 0 0 0 1 0 0 0 0</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38] 0 0 0 1 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 1 0 1 0 0 0</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [75] 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="co">#number correct</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(acc)</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 22</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">sum</span>(acc)<span class="sc">/</span><span class="fu">length</span>(el<span class="sc">$</span>from),<span class="dv">2</span>)</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.22</span></span></code></pre></div>
+<p>The accuracy for those with consensus support or better can be estimated as follows:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>nsup<span class="ot">&lt;-</span><span class="fu">length</span>(<span class="fu">which</span>(inf.support.l<span class="sc">&gt;</span><span class="fl">0.5</span>))</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>nsup</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 68</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co">#proportion of individuals with an inferred source with consensus support</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(nsup<span class="sc">/</span><span class="fu">nrow</span>(epi.data),<span class="dv">2</span>)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.68</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="co">#accuracy for the inferred sources of these individuals only</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">sum</span>(acc[inf.support.l<span class="sc">&gt;</span><span class="fl">0.5</span>])<span class="sc">/</span>nsup, <span class="dv">2</span>)</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.19</span></span></code></pre></div>
+<p>Noting that this inference needs to be run for around 100,000 MCMC iterations for the tree to converge and these example data are based on only 10000 iterations.</p>
+<div style="page-break-after: always;"></div>
+</div>
+<div id="inferred-key-timings" class="section level4">
+<h4>Inferred key timings</h4>
+<p>Pre-prepared data on the inferred timing of exposured of each individual for each iteration in each chain have been inputted by reading in the comma separated <code>t_e_current.csv</code> files produced by independantly seeded <code>infer()</code> runs on the same input data.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(te1)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">head</span>(te1[,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]), <span class="dv">3</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      V1    V2    V3    V4    V5    V6    V7    V8    V9   V10</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.573 4.872 0.002 3.055 3.698 1.641 0.185 1.373 6.346 5.326</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 0.905 4.872 0.002 3.055 3.698 1.641 0.185 1.373 6.346 5.326</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 0.905 4.872 0.002 3.055 3.698 1.641 0.185 1.373 6.346 5.326</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 0.905 4.872 0.002 3.055 3.698 1.641 0.185 1.373 6.346 5.654</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 0.905 4.872 0.002 3.055 3.698 1.641 0.185 1.373 6.346 5.654</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 0.905 4.872 0.002 3.055 3.698 1.641 0.185 1.373 6.346 5.654</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">tail</span>(te1[,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]), <span class="dv">3</span>)</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          V1    V2    V3    V4    V5    V6    V7    V8    V9   V10</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9995  2.042 1.429 0.606 1.883 1.792 1.163 2.234 4.135 4.360 3.097</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9996  2.042 1.429 0.277 1.883 1.792 1.163 2.234 4.135 3.764 3.097</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9997  2.042 1.429 0.277 1.883 1.792 1.163 2.234 4.135 3.764 3.097</span></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9998  2.042 1.429 0.277 1.883 1.792 1.163 2.234 4.135 3.764 3.097</span></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9999  2.042 1.429 0.277 1.883 1.792 1.163 2.234 4.135 3.764 3.097</span></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10000 2.042 1.429 0.277 1.883 1.792 1.163 2.234 4.135 3.764 3.097</span></span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(te2)</span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">head</span>(te2[,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]), <span class="dv">3</span>)</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   V1    V2   V3 V4    V5    V6    V7    V8    V9   V10</span></span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  0 4.992 0.65  4 2.448 1.462 0.185 1.373 6.048 5.231</span></span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  0 4.992 0.65  4 2.448 1.462 0.185 1.373 6.048 5.231</span></span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  0 4.992 0.65  4 2.448 1.263 0.185 1.373 6.048 5.864</span></span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  0 4.992 0.65  4 2.448 1.263 0.185 1.373 6.048 5.864</span></span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  0 4.992 0.65  4 2.448 1.263 0.185 1.373 6.087 5.796</span></span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  0 4.992 0.65  4 2.448 1.263 0.460 1.373 6.087 5.796</span></span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">tail</span>(te2[,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]), <span class="dv">3</span>)</span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          V1    V2    V3    V4    V5    V6    V7    V8    V9   V10</span></span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9995  1.905 2.894 0.031 4.916 2.587 3.046 3.268 4.259 4.828 4.820</span></span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9996  1.905 2.894 0.031 4.916 4.155 3.046 3.268 4.259 4.828 4.820</span></span>
+<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9997  1.905 2.894 0.031 4.916 4.155 3.046 3.268 4.259 4.828 3.832</span></span>
+<span id="cb32-32"><a href="#cb32-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9998  1.905 2.894 0.031 4.916 4.155 3.046 3.268 4.259 4.828 3.832</span></span>
+<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9999  1.905 2.894 0.031 4.916 4.155 3.046 3.268 4.259 4.828 3.832</span></span>
+<span id="cb32-34"><a href="#cb32-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10000 1.905 2.894 0.031 4.916 4.155 3.046 3.268 4.259 4.828 3.832</span></span></code></pre></div>
+<p>Again we’ll use the same burn-in parameters. This time collating lists with posterior median estimates of the day of exposure for each individual with 95% Bayesian credible intervals.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>burnin<span class="ot">=</span><span class="dv">5000</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>thin <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>end<span class="ot">=</span><span class="fl">1e04</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>x<span class="ot">&lt;-</span><span class="fu">seq</span>(burnin<span class="sc">+</span><span class="dv">1</span>,end,thin)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>te.l<span class="ot">&lt;-</span><span class="fu">list</span>()</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>te.q.l<span class="ot">&lt;-</span><span class="fu">list</span>()</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(epi.data)){  </span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  te.l[[i]]<span class="ot">&lt;-</span><span class="fu">c</span>(te1[x,i], te2[x,i])</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  te.q.l[[i]]<span class="ot">&lt;-</span><span class="fu">quantile</span>(te.l[[i]], <span class="at">probs=</span><span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.025</span>, <span class="fl">0.975</span>))</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="co">#inspecting some of the inferred exposure timings</span></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(te.q.l[[<span class="dv">1</span>]], <span class="dv">2</span>)</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   50%  2.5% 97.5% </span></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1.86  1.16  2.47</span></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(te.q.l[[<span class="dv">2</span>]], <span class="dv">2</span>)</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   50%  2.5% 97.5% </span></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2.36  1.17  4.02</span></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(te.q.l[[<span class="dv">3</span>]], <span class="dv">2</span>)</span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   50%  2.5% 97.5% </span></span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  0.40  0.03  1.28</span></span></code></pre></div>
+<p>Pre-prepared data on the inferred timing of onset of infectiousness of each individual for each iteration in each chain have been inputted by reading in the comma separated <code>t_i_current.csv</code> files produced by independantly seeded <code>infer()</code> runs on the same input data.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(ti1)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">head</span>(ti1[,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]), <span class="dv">3</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   V1 V2 V3 V4    V5 V6 V7 V8    V9 V10</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  1  5  1  9 4.000  2  2  3 6.732   6</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  1  5  1  9 4.000  2  2  3 6.732   6</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  1  5  1  9 4.000  2  2  3 6.732   6</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  1  5  1  9 4.000  2  2  3 6.732   6</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  1  5  1  9 4.000  2  2  3 6.732   6</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  1  5  1  9 4.652  2  2  3 6.732   6</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">tail</span>(ti1[,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]), <span class="dv">3</span>)</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          V1    V2    V3    V4    V5    V6    V7    V8    V9   V10</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9995  2.544 2.494 1.063 5.944 3.605 1.823 6.262 7.921 7.681 5.834</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9996  2.544 2.494 1.063 5.944 3.605 1.823 6.262 7.921 7.681 5.834</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9997  2.544 2.494 1.063 5.944 3.605 1.823 6.262 7.921 7.681 5.834</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9998  2.544 2.494 1.063 5.944 3.605 1.823 6.262 7.921 7.681 5.834</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9999  2.544 2.494 1.063 5.944 3.605 1.823 6.262 7.921 7.681 5.834</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10000 2.544 2.494 1.063 5.944 3.605 1.823 6.262 7.921 7.681 5.834</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(ti2)</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">head</span>(ti2[,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]), <span class="dv">3</span>)</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   V1 V2 V3 V4 V5    V6 V7 V8    V9 V10</span></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  1  5  1  9  4 3.146  2  3 7.000   6</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  1  5  1  9  4 3.146  2  3 7.000   6</span></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  1  5  1  9  4 3.146  2  3 6.125   6</span></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  1  5  1  9  4 3.146  2  3 6.125   6</span></span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  1  5  1  9  4 3.146  2  3 6.125   6</span></span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  1  5  1  9  4 3.146  2  3 6.125   6</span></span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">tail</span>(ti2[,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]), <span class="dv">3</span>)</span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          V1    V2    V3     V4   V5    V6   V7    V8    V9   V10</span></span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9995  2.889 4.081 1.748  8.271 7.24 3.336 3.99 7.572 6.682 6.082</span></span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9996  2.889 4.081 1.748  8.271 7.24 3.336 3.99 7.572 6.682 6.082</span></span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9997  2.889 4.081 1.748  8.271 7.24 3.336 3.99 7.572 6.682 6.082</span></span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9998  2.889 4.081 1.748  8.271 7.24 3.336 3.99 7.572 6.682 6.082</span></span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9999  2.889 4.081 1.748 10.267 7.24 3.336 3.99 7.572 6.682 6.082</span></span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10000 2.889 4.081 1.748 10.267 7.24 3.336 3.99 7.572 6.682 6.082</span></span></code></pre></div>
+<div style="page-break-after: always;"></div>
+<p>Again we’ll use the same burn-in parameters. This time collating lists with posterior median estimates of the day of onset of infectousness for each individual with 95% Bayesian credible intervals.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>burnin<span class="ot">=</span><span class="dv">5000</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>thin <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>end<span class="ot">=</span><span class="fl">1e04</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>x<span class="ot">&lt;-</span><span class="fu">seq</span>(burnin<span class="sc">+</span><span class="dv">1</span>,end,thin)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>ti.l<span class="ot">&lt;-</span><span class="fu">list</span>()</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>ti.q.l<span class="ot">&lt;-</span><span class="fu">list</span>()</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(epi.data)){  </span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  ti.l[[i]]<span class="ot">&lt;-</span><span class="fu">c</span>(ti1[x,i], ti2[x,i])</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  ti.q.l[[i]]<span class="ot">&lt;-</span><span class="fu">quantile</span>(ti.l[[i]], <span class="at">probs=</span><span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.025</span>, <span class="fl">0.975</span>))</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="co">#inspecting some of the inferred exposure timings</span></span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(ti.q.l[[<span class="dv">1</span>]], <span class="dv">2</span>)</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   50%  2.5% 97.5% </span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2.54  2.29  2.74</span></span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(ti.q.l[[<span class="dv">2</span>]], <span class="dv">2</span>)</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   50%  2.5% 97.5% </span></span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5.00  2.49  9.20</span></span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(ti.q.l[[<span class="dv">3</span>]], <span class="dv">2</span>)</span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   50%  2.5% 97.5% </span></span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1.27  0.94  1.94</span></span></code></pre></div>
+<div style="page-break-after: always;"></div>
+</div>
+<div id="inferred-sequences" class="section level4">
+<h4>Inferred sequences</h4>
+<p>A sequence is recorded (in every iteration) whenever an individual is infected, sampled or when it infects another individual. So each individual can have a different number of sequences recorded from other individuals, even from itself in different iterations.</p>
+<p>Each iteration, the timing of recorded sequences is captured in the output file <code>seqs_t_current_csv</code> with 1 row per individual, comma-separated.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(nt.t1)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(nt.t1)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                                   V1</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1                         0,1.23898,1.907,3,3.05547 </span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2                                 4.99155,5.6523,11 </span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 0.720324,1.14676,1.1981,1.37252,1.73364,6.93066,9 </span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4                                 3.05547,5,12.0619 </span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5                                             1.907 </span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6                                           1.14676</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>nt.t.l<span class="ot">&lt;-</span><span class="fu">apply</span>(nt.t1, <span class="at">MARGIN=</span><span class="dv">1</span>, </span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">FUN =</span> <span class="cf">function</span>(x) <span class="fu">as.numeric</span>(<span class="fu">unlist</span>(<span class="fu">strsplit</span>(x, <span class="st">&quot;,&quot;</span>))))</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a><span class="co"># the timings corresponding to the sequences for the first three individuals</span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a><span class="co"># in the first iteration</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>nt.t.l[[<span class="dv">1</span>]]</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.00000 1.23898 1.90700 3.00000 3.05547</span></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>nt.t.l[[<span class="dv">2</span>]]</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]  4.99155  5.65230 11.00000</span></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>nt.t.l[[<span class="dv">3</span>]]</span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.720324 1.146760 1.198100 1.372520 1.733640 6.930660 9.000000</span></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a><span class="co"># the timings corresponding to the sequences for the first</span></span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a><span class="co"># individual in the first three iterations</span></span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>nt.t.l[[pars.aux<span class="sc">$</span>n<span class="sc">*</span><span class="dv">0</span><span class="sc">+</span><span class="dv">1</span>]]</span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.00000 1.23898 1.90700 3.00000 3.05547</span></span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>nt.t.l[[pars.aux<span class="sc">$</span>n<span class="sc">*</span><span class="dv">1</span><span class="sc">+</span><span class="dv">1</span>]]</span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2.49883 2.98227 3.00000 3.08243 3.73211 3.82546 3.83107</span></span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>nt.t.l[[pars.aux<span class="sc">$</span>n<span class="sc">*</span><span class="dv">2</span><span class="sc">+</span><span class="dv">1</span>]]</span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2.76420 2.79978 3.00000 3.00476 3.36984</span></span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a><span class="co">#this indiviual was sampled at</span></span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a>t.sample<span class="ot">&lt;-</span><span class="fu">round</span>(sim.out<span class="sc">$</span>t_sample, <span class="dv">0</span>)</span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>t.sample[<span class="dv">1</span>]</span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 6</span></span></code></pre></div>
+<p>For instance in the above example, in the first iteration, the first individual was infected at t=0, then infected 3 further individuals at times t = 1.24, 1.91 and 3.06 days, and was sampled at t=3.00 days.</p>
+<div style="page-break-after: always;"></div>
+<p>The number of sequences per individual, per iteration, can thus be derived as:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>nt.size<span class="ot">&lt;-</span><span class="fu">sapply</span>(nt.t.l, length)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>nt.size[[pars.aux<span class="sc">$</span>n<span class="sc">*</span><span class="dv">0</span><span class="sc">+</span><span class="dv">1</span>]]</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 5</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>nt.size[[pars.aux<span class="sc">$</span>n<span class="sc">*</span><span class="dv">1</span><span class="sc">+</span><span class="dv">1</span>]]</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 7</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>nt.size[[pars.aux<span class="sc">$</span>n<span class="sc">*</span><span class="dv">2</span><span class="sc">+</span><span class="dv">1</span>]]</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 5</span></span></code></pre></div>
+<p>As can the total number of sequences, and then the sequence sets recorded per iteration, which is used to lookup specific sequences:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#total number of sequences recorded</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(nt.size)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3140</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co">#matrix to hold number of sequences per individual (column) per iteration (row)</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>nt.size.mat<span class="ot">&lt;-</span><span class="fu">matrix</span>(nt.size, <span class="at">byrow =</span> T, <span class="at">ncol=</span>pars.aux<span class="sc">$</span>n)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>nt.size.mat[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1,]    5    3    7    3    1    1    9    4    4     4</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2,]    7    5    5    2    1    1    5    3    3     3</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="co">#total number of sequences stored per iteration</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>nt.size.mat.sizes <span class="ot">&lt;-</span> <span class="fu">apply</span>(nt.size.mat, <span class="at">MARGIN =</span> <span class="dv">1</span>, <span class="at">FUN =</span> sum)</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>nt.size.mat.sizes</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] 279 287 286 286 286 286 286 286 286 286 286</span></span></code></pre></div>
+<p>This can then be used to lookup specific inferred sequences, per iteration, per individual.</p>
+<p>The corresponding inferred sequences are stored in the file <code>seqs_current.csv</code>.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(nt.seq1)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co">#1 sequence per row, corresponding to the timings in nt.t1</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(nt.seq1)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3140 7667</span></span></code></pre></div>
+<div style="page-break-after: always;"></div>
+<p>For the first individual in the first iteration, the 5 sequences are stored as:</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>nt.size[[<span class="dv">1</span>]]</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 5</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>nt.seq1[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   V1 V2 V3 V4 V5 V6 V7 V8 V9 V10</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  2  4  3  4  2  1  3  3  2   4</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  2  4  3  4  2  1  3  3  2   4</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  2  4  3  4  2  1  3  3  2   4</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  2  1  3  2  2  1  3  3  4   4</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  2  1  3  2  2  1  3  3  4   4</span></span></code></pre></div>
+<p>For the second individual in the first iteration, the 3 sequences are stored as follows:</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>nt.size[[<span class="dv">1</span>]]</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 5</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>nt.size[[<span class="dv">2</span>]]</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>nt.seq1[<span class="dv">6</span><span class="sc">:</span><span class="dv">8</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   V1 V2 V3 V4 V5 V6 V7 V8 V9 V10</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  2  4  3  2  2  3  3  3  4   4</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7  2  4  3  2  2  3  3  3  4   4</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8  2  1  3  2  2  1  3  3  4   4</span></span></code></pre></div>
+<p>For the second individual in the second iteration, there are 5 sequences recorded:</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>nt.size[[pars.aux<span class="sc">$</span>n<span class="sc">*</span><span class="dv">1</span><span class="sc">+</span><span class="dv">2</span>]]</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 5</span></span></code></pre></div>
+<p>And these start at row 287 in the sequence data, i.e.:</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co">#count sequences in the first iteration</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>.row.nos <span class="ot">&lt;-</span> nt.size.mat.sizes[<span class="dv">1</span>]</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co">#add sequences for the first individual in the 2nd iteration</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>.row.nos <span class="ot">&lt;-</span> .row.nos <span class="sc">+</span> nt.size[[pars.aux<span class="sc">$</span>n<span class="sc">*</span><span class="dv">1</span><span class="sc">+</span><span class="dv">1</span>]]</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="co">#count sequences for the second individual in the 2nd iteration</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>.row.nos <span class="ot">&lt;-</span> .row.nos <span class="sc">+</span> <span class="dv">1</span><span class="sc">:</span>(nt.size[[pars.aux<span class="sc">$</span>n<span class="sc">*</span><span class="dv">1</span><span class="sc">+</span><span class="dv">2</span>]])</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>.row.nos</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 287 288 289 290 291</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>nt.seq1[.row.nos,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     V1 V2 V3 V4 V5 V6 V7 V8 V9 V10</span></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 287  2  1  3  2  2  1  3  3  4   4</span></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 288  2  1  3  2  2  1  3  3  4   4</span></span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 289  2  1  3  2  2  1  3  3  4   4</span></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 290  2  1  3  2  2  1  3  3  4   4</span></span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 291  2  1  3  2  2  1  3  3  4   4</span></span></code></pre></div>
+<div style="page-break-after: always;"></div>
+<p>For the second individual in the third iteration, there are 4 sequences recorded:</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>nt.size[[pars.aux<span class="sc">$</span>n<span class="sc">*</span><span class="dv">2</span><span class="sc">+</span><span class="dv">3</span>]]</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 4</span></span></code></pre></div>
+<p>And these start at row 572 in the sequence data, i.e.:</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co">#count sequences in the earlier iterations</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>.row.nos <span class="ot">&lt;-</span> <span class="fu">sum</span>(nt.size.mat.sizes[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="co">#add sequences for the first individual in the 3nd iteration</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>.row.nos <span class="ot">&lt;-</span> .row.nos <span class="sc">+</span> nt.size[[pars.aux<span class="sc">$</span>n<span class="sc">*</span><span class="dv">2</span><span class="sc">+</span><span class="dv">1</span>]]</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="co">#count sequences for the second individual in the 3nd iteration</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>.row.nos <span class="ot">&lt;-</span> .row.nos <span class="sc">+</span> <span class="dv">1</span><span class="sc">:</span>(nt.size[[pars.aux<span class="sc">$</span>n<span class="sc">*</span><span class="dv">2</span><span class="sc">+</span><span class="dv">2</span>]])</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>.row.nos</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 572 573 574 575 576</span></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>nt.seq1[.row.nos,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     V1 V2 V3 V4 V5 V6 V7 V8 V9 V10</span></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 572  2  1  3  2  2  1  3  3  4   4</span></span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 573  2  1  3  2  2  1  3  3  4   4</span></span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 574  2  1  3  2  2  1  3  3  4   4</span></span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 575  2  1  3  2  2  1  3  3  4   4</span></span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 576  2  1  3  2  2  1  3  3  4   4</span></span></code></pre></div>
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
